@@ -16,7 +16,13 @@ module TSOS {
 
         constructor() {
             // Override the base method pointers.
-            super(this.krnKbdDriverEntry, this.krnKbdDispatchKeyPress);
+
+            // The code below cannot run because "this" can only be
+            // accessed after calling super.
+            //super(this.krnKbdDriverEntry, this.krnKbdDispatchKeyPress);
+            super();
+            this.driverEntry = this.krnKbdDriverEntry;
+            this.isr = this.krnKbdDispatchKeyPress;
         }
 
         public krnKbdDriverEntry() {

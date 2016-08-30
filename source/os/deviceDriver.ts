@@ -10,8 +10,13 @@ module TSOS {
         public status = 'unloaded';
         public preemptable = false;
 
-        constructor(public driverEntry = null,
-                    public isr = null) {
-        }
+        public driverEntry = null;
+        public isr = null;
+
+        // The constructor below is useless because child classes
+        // cannot pass "this" arguments when calling super().
+        //constructor(public driverEntry = null,
+        //            public isr = null) {
+        //}
     }
 }
