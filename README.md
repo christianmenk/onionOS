@@ -1,4 +1,4 @@
-CHICKENS 2.0 OS (Name subject to change)
+Onion OS
 =========================================
 Christian Menk
 

@@ -1,7 +1,12 @@
 /* TSOS.css */
 
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
-  background: #909193 url(distrib/images/linen.png) repeat;
+  background: linear-gradient(ghostwhite, mediumpurple);
   font-family: Helvetica, Verdana, Arial, sans-serif;
   font-size: 12pt;
   font-weight: normal;
@@ -13,7 +18,6 @@ h1 {
   font-size: 24pt;
   font-weight: normal;
   font-style: normal;
-  border-bottom: 1px solid black;
 }
 
 h2 {

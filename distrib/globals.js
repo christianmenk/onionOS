@@ -10,8 +10,8 @@
 //
 // Global CONSTANTS (TypeScript 1.5 introduced const. Very cool.)
 //
-var APP_NAME = "CHICKENS"; // 'cause Bob and I were at a loss for a better name.
-var APP_VERSION = "2.0"; // What did you expect?
+var APP_NAME = "Onion OS"; // 'cause Bob and I were at a loss for a better name.
+var APP_VERSION = "Knight 0.01"; // What did you expect?
 var CPU_CLOCK_INTERVAL = 100; // This is in ms (milliseconds) so 1000 = 1 second.
 var _DATE = new Date();
 var TIMER_IRQ = 0; // Pages 23 (timer), 9 (interrupts), and 561 (interrupt priority).

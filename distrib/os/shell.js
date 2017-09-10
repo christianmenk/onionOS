@@ -190,7 +190,7 @@ var TSOS;
             }
         };
         Shell.prototype.shellVer = function (args) {
-            _StdOut.putText(APP_NAME + " VER " + APP_VERSION);
+            _StdOut.putText(APP_NAME + " version " + APP_VERSION);
         };
         Shell.prototype.shellHelp = function (args) {
             _StdOut.putText("Commands:");
@@ -269,13 +269,15 @@ var TSOS;
         };
 
         Shell.prototype.shellDate = function (args) {
-            _StdOut.putText(_Hour + ":" + _Min);
+            var TimeString = _Hour + ':' + ('0' + _Min).slice(-2);
+            var DateString = _Month + '/' + _Day + '/' + _Year;
+            _StdOut.putText(TimeString);
             _StdOut.advanceLine();
-            _StdOut.putText(_Month + "/" + _Day + "/" + _Year);
+            _StdOut.putText(DateString);
         };
 
         Shell.prototype.shellLoc = function (args) {
-            _StdOut.putText("Thankfully not in Florida.");
+            _StdOut.putText("Thankfully not Florida.");
         }
 
         Shell.prototype.shellKnow = function (args) {
