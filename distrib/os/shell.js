@@ -28,27 +28,48 @@ var TSOS;
             // ver
             sc = new TSOS.ShellCommand(this.shellVer, "ver", "- Displays the current version data.");
             this.commandList[this.commandList.length] = sc;
+
             // help
             sc = new TSOS.ShellCommand(this.shellHelp, "help", "- This is the help command. Seek help.");
             this.commandList[this.commandList.length] = sc;
+
             // shutdown
             sc = new TSOS.ShellCommand(this.shellShutdown, "shutdown", "- Shuts down the virtual OS but leaves the underlying host / hardware simulation running.");
             this.commandList[this.commandList.length] = sc;
+
             // cls
             sc = new TSOS.ShellCommand(this.shellCls, "cls", "- Clears the screen and resets the cursor position.");
             this.commandList[this.commandList.length] = sc;
+
             // man <topic>
             sc = new TSOS.ShellCommand(this.shellMan, "man", "<topic> - Displays the MANual page for <topic>.");
             this.commandList[this.commandList.length] = sc;
+
             // trace <on | off>
             sc = new TSOS.ShellCommand(this.shellTrace, "trace", "<on | off> - Turns the OS trace on or off.");
             this.commandList[this.commandList.length] = sc;
+
             // rot13 <string>
             sc = new TSOS.ShellCommand(this.shellRot13, "rot13", "<string> - Does rot13 obfuscation on <string>.");
             this.commandList[this.commandList.length] = sc;
+
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellPrompt, "prompt", "<string> - Sets the prompt.");
             this.commandList[this.commandList.length] = sc;
+
+            // Date command
+            sc = new TSOS.ShellCommand(this.shellDate, "date", "- Displays the date.");
+            this.commandList[this.commandList.length] = sc;
+
+            // Location command
+            sc = new TSOS.ShellCommand(this.shellLoc, "whereami", "- Displays the location.");
+            this.commandList[this.commandList.length] = sc;
+
+            //Knower of Nothing
+
+            sc = new TSOS.ShellCommand(this.shellKnow, "knowerofnothing", "- Displays the man who knows nothing.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -246,6 +267,21 @@ var TSOS;
                 _StdOut.putText("Usage: prompt <string>  Please supply a string.");
             }
         };
+
+        Shell.prototype.shellDate = function (args) {
+            _StdOut.putText(_Hour + ":" + _Min);
+            _StdOut.advanceLine();
+            _StdOut.putText(_Month + "/" + _Day + "/" + _Year);
+        };
+
+        Shell.prototype.shellLoc = function (args) {
+            _StdOut.putText("Thankfully not in Florida.");
+        }
+
+        Shell.prototype.shellKnow = function (args) {
+            _StdOut.putText("Jon Snow");
+        }
+
         return Shell;
     })();
     TSOS.Shell = Shell;
