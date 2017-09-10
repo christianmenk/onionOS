@@ -38,8 +38,13 @@
 
 <body onload="onDocumentLoad()">
 
-<div id="divMain" style="width:100%;">
+<div id="divStatusBar">
    <h1> Onion OS </h1>
+   <label id="status" style="padding-left: 18em">[Stopped]</label>
+</div>
+
+<div id="divMain" style="width:100%;">
+
    <div id="divButtonBar" style="margin:4px;">
       <input type="button"
              id = "btnStartOS"
@@ -67,16 +72,17 @@
              tabindex="2"
              onclick="TSOS.Control.hostBtnReset_click(this);">
 
-      <label id="status" style="padding-left: 1em"> [Your Status Here] </label>
+      <label id="time" style="padding-left: 8em "> 00:00:00 </label>
+
    </div>
 
-   <div id="divConsole" style="margin:4px; width:500px; height:500px; float:left;">
-      <canvas id="display"
-              width="500px"
-              height="500px"
-              tabindex="3">
-      </canvas>
-   </div>
+   <div id="divConsole" style="margin:4px; width:500px; height:553px; float:left;" >
+   <canvas id="display"
+           width="500px"
+           height="553px"
+           tabindex="3">
+   </canvas>
+</div>
 
    <div id="divLog" style="margin-left:520px;">
       <label>

@@ -60,3 +60,6 @@ var _Month = _DATE.getMonth() + 1;
 var _Day = _DATE.getDate();
 var _Year = _DATE.getFullYear();
 
+//Status
+
+var _Status = "[Stopped]";

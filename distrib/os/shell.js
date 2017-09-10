@@ -66,8 +66,11 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             //Knower of Nothing
-
             sc = new TSOS.ShellCommand(this.shellKnow, "knowerofnothing", "- Displays the man who knows nothing.");
+            this.commandList[this.commandList.length] = sc;
+
+            // Status <string>
+            sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
@@ -277,12 +280,24 @@ var TSOS;
         };
 
         Shell.prototype.shellLoc = function (args) {
-            _StdOut.putText("Thankfully not Florida.");
+            _StdOut.putText("The Stormlands, Home of the Onion Knight.");
         }
 
         Shell.prototype.shellKnow = function (args) {
             _StdOut.putText("Jon Snow");
         }
+
+        Shell.prototype.shellStatus = function (args) {
+            if (args.length > 0) {
+                _Status = args.toString().replace(',', ' ');
+                var statusLabel = document.getElementById('status');
+                statusLabel.innerText = '[' + _Status + ']';
+            }
+            else {
+                _StdOut.putText("Usage: status <string>  Please supply a string.");
+            }
+        };
+
 
         return Shell;
     })();
