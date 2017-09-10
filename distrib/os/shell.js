@@ -169,7 +169,7 @@ var TSOS;
             }
         };
         Shell.prototype.shellVer = function (args) {
-            _StdOut.putText(APP_NAME + " version " + APP_VERSION);
+            _StdOut.putText(APP_NAME + " VER " + APP_VERSION);
         };
         Shell.prototype.shellHelp = function (args) {
             _StdOut.putText("Commands:");
