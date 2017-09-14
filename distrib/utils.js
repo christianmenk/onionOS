@@ -61,14 +61,12 @@ function TimeRefresh(){
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
-    var timeStr = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
-    clock.innerText = timeStr;
+    clock.innerText =  ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
 
     var month = d.getMonth() + 1;
     var day = d.getDate();
     var year = d.getFullYear();
-    var dateStr = ('0' + month).slice(-2) + '/' + ('0' + day).slice(-2) + '/' + year;
-    date.innerText = dateStr;
+    date.innerText = ('0' + month).slice(-2) + '/' + ('0' + day).slice(-2) + '/' + year;
 
     _Timeout = setTimeout(TimeRefresh, 500, true);
 }

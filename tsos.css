@@ -46,7 +46,7 @@ h3 {
   width: 100px;
   border: solid mediumpurple;
   background: whitesmoke;
-  font-family: Verdana;
+  font-family: Verdana, sans-serif;
 }
 
 textarea {
