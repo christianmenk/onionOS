@@ -56,16 +56,26 @@ var TSOS;
 function TimeRefresh(){
     var d = new Date();
     var clock = document.getElementById("time");
+    var date = document.getElementById("date");
+
     var h = d.getHours();
     var m = d.getMinutes();
     var s = d.getSeconds();
     var timeStr = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
     clock.innerText = timeStr;
+
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var year = d.getFullYear();
+    var dateStr = ('0' + month).slice(-2) + '/' + ('0' + day).slice(-2) + '/' + year;
+    date.innerText = dateStr;
+
     _Timeout = setTimeout(TimeRefresh, 500, true);
 }
 
 function StopTime(){
     document.getElementById("time").innerText = "00:00:00";
+    document.getElementById("date").innerText = "00/00/0000";
     clearTimeout(_Timeout);
 }
 

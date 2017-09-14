@@ -37,13 +37,19 @@ h3 {
 }
 
 #display {
-  background-color:#DFDBC3;
-  border: 2px solid purple;
+  background-color:#faefff;
+  border: 2px solid mediumpurple;
   cursor: default;
 }
 
 .normal_button {
   width: 100px;
+  border: solid mediumpurple;
+  font-family: "Verdana";
+}
+
+textarea {
+  border: solid mediumpurple;
 }
 
 .footerText {
