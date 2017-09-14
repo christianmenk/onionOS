@@ -83,11 +83,14 @@ var TSOS;
             // .. and call the OS Kernel Bootstrap routine.
             _Kernel = new TSOS.Kernel();
             _Kernel.krnBootstrap(); // _GLaDOS.afterStartup() will get called in there, if configured.
+            TimeRefresh();
         };
         Control.hostBtnHaltOS_click = function (btn) {
             Control.hostLog("Emergency halt", "host");
             Control.hostLog("Attempting Kernel shutdown.", "host");
             document.getElementById("status").innerText = "[Stopped]";
+            StopTime();
+
             _Status = "[Stopped]";
             // Call the OS shutdown routine.
             _Kernel.krnShutdown();

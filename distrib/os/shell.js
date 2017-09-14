@@ -66,7 +66,7 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             //Knower of Nothing
-            sc = new TSOS.ShellCommand(this.shellKnow, "knowerofnothing", "- Displays the man who knows nothing.");
+            sc = new TSOS.ShellCommand(this.shellOnion, "onionknight", "- Displays the Onion Knight.");
             this.commandList[this.commandList.length] = sc;
 
             // Status <string>
@@ -272,24 +272,31 @@ var TSOS;
         };
 
         Shell.prototype.shellDate = function (args) {
-            var TimeString = _Hour + ':' + ('0' + _Min).slice(-2);
-            var DateString = _Month + '/' + _Day + '/' + _Year;
-            _StdOut.putText(TimeString);
+            var date = new Date();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var year = date.getFullYear();
+            var timeString =('0' + hour).slice(-2) + ':' + ('0' + min).slice(-2) + ":" + ('0' + sec).slice(-2);
+            var dateString = month + '/' + day + '/' + year;
+            _StdOut.putText(timeString);
             _StdOut.advanceLine();
-            _StdOut.putText(DateString);
+            _StdOut.putText(dateString);
         };
 
         Shell.prototype.shellLoc = function (args) {
             _StdOut.putText("The Stormlands, Home of the Onion Knight.");
         }
 
-        Shell.prototype.shellKnow = function (args) {
-            _StdOut.putText("Jon Snow");
+        Shell.prototype.shellOnion = function (args) {
+            document.getElementById("davos").style.visibility = "visible";
         }
 
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
-                _Status = args.toString().replace(',', ' ');
+                _Status = args.toString().replace(/,/g,' ');
                 var statusLabel = document.getElementById('status');
                 statusLabel.innerText = '[' + _Status + ']';
             }

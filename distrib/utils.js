@@ -45,6 +45,24 @@ var TSOS;
             return retVal;
         };
         return Utils;
-    })();
-    TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));
+
+
+// Clock functions
+
+function TimeRefresh(){
+    var d = new Date();
+    var clock = document.getElementById("time");
+    var h = d.getHours();
+    var m = d.getMinutes();
+    var s = d.getSeconds();
+    var timeStr = ('0' + h).slice(-2) + ':' + ('0' + m).slice(-2) + ":" + ('0' + s).slice(-2);
+    clock.innerText = timeStr;
+    _Timeout = setTimeout(TimeRefresh, 500, true);
+}
+
+function StopTime(){
+    document.getElementById("time").innerText = "00:00:00";
+    clearTimeout(_Timeout);
+}
+
