@@ -81,13 +81,17 @@ var TSOS;
             this.currentYPosition += _DefaultFontSize +
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
-            // TODO: Handle scrolling. (iProject 1)
 
-            if(this.currentYPosition >= _Canvas.height){
-                var snapshot = _DrawingContext.getImageData(0,this.currentFontSize,_Canvas.width,_Canvas.height);
+            /*                                       SCROLLING
+                Take snapshot of canvas using getImageData using the current font size as an offset
+                if the Y position exceeds the canvas height. Then, use putImageData to place the offset'd
+                (is that a word?) snapshot back onto the canvas, then reassign the Y position.
+            */
+
+            if (this.currentYPosition >= _Canvas.height) {
+                var snapshot = _DrawingContext.getImageData(0, this.currentFontSize + 5, _Canvas.width, _Canvas.height);
                 _DrawingContext.putImageData(snapshot, 0, 0);
-                // Move the current Y position
-                this.CurrentYPosition = _Canvas.height;
+                this.currentYPosition = _Canvas.height - this.currentFontSize;
             }
 
         };

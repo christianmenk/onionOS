@@ -8,6 +8,7 @@ var TSOS;
     var Utils = (function () {
         function Utils() {
         }
+
         Utils.trim = function (str) {
             // Use a regular expression to remove leading and trailing spaces.
             return str.replace(/^\s+ | \s+$/g, "");
@@ -45,6 +46,8 @@ var TSOS;
             return retVal;
         };
         return Utils;
+    })();
+    TSOS.Utils = Utils;
 })(TSOS || (TSOS = {}));
 
 
