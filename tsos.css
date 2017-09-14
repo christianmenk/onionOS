@@ -45,7 +45,8 @@ h3 {
 .normal_button {
   width: 100px;
   border: solid mediumpurple;
-  font-family: "Verdana";
+  background: whitesmoke;
+  font-family: Verdana;
 }
 
 textarea {

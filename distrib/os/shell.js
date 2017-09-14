@@ -288,11 +288,11 @@ var TSOS;
 
         Shell.prototype.shellLoc = function (args) {
             _StdOut.putText("The Stormlands, Home of the Onion Knight.");
-        }
+        };
 
         Shell.prototype.shellOnion = function (args) {
             document.getElementById("davos").style.visibility = "visible";
-        }
+        };
 
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
