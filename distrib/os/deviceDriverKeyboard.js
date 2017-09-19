@@ -47,12 +47,79 @@ var TSOS;
                 _KernelInputQueue.enqueue(chr);
             }
             else if (((keyCode >= 48) && (keyCode <= 57)) ||
-                (keyCode == 32) ||
-                (keyCode == 13)) {
-                chr = String.fromCharCode(keyCode);
+                (keyCode === 32) ||
+                (keyCode === 13)) {
+
+                //Use numCharHandler to determine if the user is entering a number or a symbol
+                chr = numCharHandler(keyCode, isShifted);
+
                 _KernelInputQueue.enqueue(chr);
+            } else {
+                // Use charHandler to find out what is being used
+                var char = charHandler(keyCode,isShifted);
+                _KernelInputQueue.enqueue(char);
             }
+
+
         };
+
+        // charHandler is two switch cases because yours truly couldn't think of a better solution
+        function charHandler(keyCode, shifted){
+            if(!shifted){
+                switch(keyCode){
+                    case 186: return ';';
+                    case 187: return '=';
+                    case 188: return ',';
+                    case 189: return '-';
+                    case 190: return '.';
+                    case 191: return '/';
+                    case 192: return '`';
+                    case 219: return '[';
+                    case 220: return '\\';
+                    case 221: return ']';
+                    case 222: return '\'';
+                    default:  break;
+                }
+            } else {
+                switch(keyCode){
+                    case 186: return ':';
+                    case 187: return '+';
+                    case 188: return '<';
+                    case 189: return '_';
+                    case 190: return '>';
+                    case 191: return '?';
+                    case 192: return '~';
+                    case 219: return '{';
+                    case 220: return '|';
+                    case 221: return '}';
+                    case 222: return '\"';
+                    default: break;
+                }
+            }
+        }
+
+        // This function is for determining whether a user is entering a number or a symbol
+        function numCharHandler(keyCode, shifted){
+            if(!shifted){
+                return String.fromCharCode(keyCode);
+            } else {
+                switch(keyCode) {
+                    case 48: return ')';
+                    case 49: return '!';
+                    case 50: return '@';
+                    case 51: return '#';
+                    case 52: return '$';
+                    case 53: return '%';
+                    case 54: return '^';
+                    case 55: return '&';
+                    case 56: return '*';
+                    case 57: return '(';
+                    default: break;
+                }
+            }
+        }
+
+
         return DeviceDriverKeyboard;
     })(TSOS.DeviceDriver);
     TSOS.DeviceDriverKeyboard = DeviceDriverKeyboard;

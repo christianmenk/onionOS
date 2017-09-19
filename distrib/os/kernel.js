@@ -154,8 +154,32 @@ var TSOS;
         };
         Kernel.prototype.krnTrapError = function (msg) {
             TSOS.Control.hostLog("OS ERROR - TRAP: " + msg);
-            // TODO: Display error on console, perhaps in some sort of colored screen. (Maybe blue?)
+
+            // Prepping the BSOD
+            _StdOut.clearScreen();
+            _StdOut.resetXY();
+            _DrawingContext.strokeStyle = "white";
+            _DrawingContext.fillStyle = "blue";
+            _DrawingContext.fillRect(0,0,_Canvas.width,_Canvas.height);
+
+            // Writing the BSOD
+            _StdOut.putText("Whoops, something went wrong.");
+            _StdOut.advanceLine();
+            _StdOut.putText("OS Error: " + msg);
+            _StdOut.advanceLine();
+            _StdOut.putText("System will now shut down regardless of your opinion.");
+
+            // This is just an OCD thing to stop the prompt from coming up after the last message
+            _DrawingContext.strokeStyle = "blue";
+            _StdOut.advanceLine();
+
+            // Shutdown calls
             this.krnShutdown();
+            clearInterval(_hardwareClockID);
+            document.getElementById("status").innerText = "[Stopped]";
+            StopTime();
+
+            _Status = "[Stopped]";
         };
         return Kernel;
     })();

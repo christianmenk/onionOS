@@ -73,6 +73,10 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellStatus, "status", "<string> - Sets the status.");
             this.commandList[this.commandList.length] = sc;
 
+            // Used for testing OS error shutdown
+            sc = new TSOS.ShellCommand(this.shellError, "rip", "- Tests kernel shutdown due to OS error.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -303,6 +307,10 @@ var TSOS;
             else {
                 _StdOut.putText("Usage: status <string>  Please supply a string.");
             }
+        };
+
+        Shell.prototype.shellError = function (args) {
+            _Kernel.krnTrapError("Testing function called - no real errors present");
         };
 
 
