@@ -64,9 +64,8 @@ var TSOS;
                 _KernelInputQueue.enqueue(char);
 
             // Handling backspace
-            } else if (keyCode === 8) {
-                chr = String.fromCharCode(keyCode);
-                _KernelInputQueue.enqueue(chr);
+            } else if ((keyCode === 8) || (keyCode === 38)) {
+                _KernelInputQueue.enqueue(String.fromCharCode(keyCode));
 
             }
         };
