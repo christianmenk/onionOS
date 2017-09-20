@@ -21,7 +21,7 @@ var TSOS;
             this.currentXPosition = currentXPosition;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
-            this.cmdHistory = cmdHistory;
+            this.cmdHistory = new Array();
             this.historyIndex = -1;
         }
         Console.prototype.init = function () {
@@ -41,7 +41,7 @@ var TSOS;
                 var chr = _KernelInputQueue.dequeue();
                 // Check to see if it's "special" (enter or ctrl-c) or "normal" (anything else that the keyboard device driver gave us).
                 if (chr === String.fromCharCode(13)) {
-                   // this.cmdHistory.push(this.buffer);
+                    this.cmdHistory.push(this.buffer);
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
                     _OsShell.handleInput(this.buffer);
@@ -53,15 +53,18 @@ var TSOS;
                     // Check to make sure there is something to delete
                     if (this.buffer.length !== 0) {
                         var lastChar = this.buffer[this.buffer.length - 1];
-                        // Use our BS Handler
                         this.bsHandler(lastChar);
+
                         // Remove last letter of buffer
                         this.buffer = this.buffer.slice(0, this.buffer.length - 1);
                     }
 
                 } else if (chr === String.fromCharCode(38)){
-                    this.removeLine();
+                    this.getCommand("up")
+                } else if (chr === String.fromCharCode(40)){
+                    this.getCommand("down")
                 }
+
                 // Normal letters
                 else {
                     // This is a "normal" character, so ...
@@ -113,6 +116,18 @@ var TSOS;
                 this.currentYPosition = _Canvas.height - this.currentFontSize;
             }
 
+        };
+
+        Console.prototype.getCommand = function (type){
+            this.removeLine();
+            if(type == "up"){
+                this.historyIndex += 1;
+                this.buffer = this.cmdHistory[this.historyIndex];
+            } else if (type == "down") {
+                this.historyIndex -= 1;
+                this.buffer = this.cmdHistory[this.historyIndex];
+            }
+            this.putText(this.buffer);
         };
 
         Console.prototype.removeLine = function() {
