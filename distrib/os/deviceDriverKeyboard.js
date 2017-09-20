@@ -46,21 +46,29 @@ var TSOS;
                 // TODO: Check for caps-lock and handle as shifted if so.
                 _KernelInputQueue.enqueue(chr);
             }
+            // Numbers & symbols
             else if (((keyCode >= 48) && (keyCode <= 57)) ||
                 (keyCode === 32) ||
                 (keyCode === 13)) {
 
                 //Use numCharHandler to determine if the user is entering a number or a symbol
                 chr = numCharHandler(keyCode, isShifted);
-
                 _KernelInputQueue.enqueue(chr);
-            } else {
+
+            // Symbols
+            } else if (((keyCode >= 186) &&(keyCode <= 192)) ||
+                      ((keyCode >= 219) && (keyCode <= 222))){
+
                 // Use charHandler to find out what is being used
                 var char = charHandler(keyCode,isShifted);
                 _KernelInputQueue.enqueue(char);
+
+            // Handling backspace
+            } else if (keyCode === 8) {
+                chr = String.fromCharCode(keyCode);
+                _KernelInputQueue.enqueue(chr);
+
             }
-
-
         };
 
         // charHandler is two switch cases because yours truly couldn't think of a better solution
@@ -98,7 +106,7 @@ var TSOS;
             }
         }
 
-        // This function is for determining whether a user is entering a number or a symbol
+        // This function is for determining if the user is entering a number or symbol
         function numCharHandler(keyCode, shifted){
             if(!shifted){
                 return String.fromCharCode(keyCode);
