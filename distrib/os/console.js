@@ -58,15 +58,17 @@ var TSOS;
                         // Remove last letter of buffer
                         this.buffer = this.buffer.slice(0, this.buffer.length - 1);
                     }
-
+                    // Up arrow handling
                 } else if (chr === String.fromCharCode(38)){
                     this.historyIndex -= 1;
                     this.getCommand();
 
+                    // Down arrow handling
                 } else if (chr === String.fromCharCode(40)){
                     this.historyIndex += 1;
                     this.getCommand();
 
+                    // Handle tab completion
                 } else if (chr === String.fromCharCode(9)){
                     this.tabMatch();
                 }
