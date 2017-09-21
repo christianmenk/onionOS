@@ -22,7 +22,7 @@ var TSOS;
             this.currentYPosition = currentYPosition;
             this.buffer = buffer;
             this.cmdHistory = new Array();
-            this.historyIndex = -1;
+            this.historyIndex = historyIndex;
         }
         Console.prototype.init = function () {
             this.clearScreen();
@@ -44,10 +44,10 @@ var TSOS;
                     this.cmdHistory.push(this.buffer);
                     // The enter key marks the end of a console command, so ...
                     // ... tell the shell ...
+                    this.historyIndex = this.cmdHistory.length;
                     _OsShell.handleInput(this.buffer);
                     // ... and reset our buffer.
                     this.buffer = "";
-
                     // Handling backspace
                 } else if (chr === String.fromCharCode(8)) {
                     // Check to make sure there is something to delete
@@ -60,9 +60,13 @@ var TSOS;
                     }
 
                 } else if (chr === String.fromCharCode(38)){
-                    this.getCommand("up")
+                    this.historyIndex -= 1;
+                    this.getCommand();
+
                 } else if (chr === String.fromCharCode(40)){
-                    this.getCommand("down")
+                    this.historyIndex += 1;
+                    this.getCommand();
+
                 }
 
                 // Normal letters
@@ -109,7 +113,6 @@ var TSOS;
                 if the Y position exceeds the canvas height. Then, use putImageData to place the offset'd
                 (is that a word?) snapshot back onto the canvas, then reassign the Y position.
                                                                                                            */
-
             if (this.currentYPosition >= _Canvas.height) {
                 var snapshot = _DrawingContext.getImageData(0, this.currentFontSize + 5, _Canvas.width, _Canvas.height);
                 _DrawingContext.putImageData(snapshot, 0, 0);
@@ -120,13 +123,16 @@ var TSOS;
 
         Console.prototype.getCommand = function (type){
             this.removeLine();
-            if(type == "up"){
-                this.historyIndex += 1;
-                this.buffer = this.cmdHistory[this.historyIndex];
-            } else if (type == "down") {
-                this.historyIndex -= 1;
-                this.buffer = this.cmdHistory[this.historyIndex];
+            if(this.cmdHistory.length === 0){
+                this.historyIndex = 0;
             }
+            if (this.historyIndex < 0){
+                this.historyIndex = 0;
+            } else if (this.historyIndex >= this.cmdHistory.length){
+                this.historyIndex = this.cmdHistory.length - 1;
+            }
+
+            this.buffer = this.cmdHistory[this.historyIndex];
             this.putText(this.buffer);
         };
 
