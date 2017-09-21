@@ -334,6 +334,8 @@ var TSOS;
         Shell.prototype.shellLoad = function () {
             var userInput = document.getElementById("taProgramInput").value.trim();
             var inputArray = userInput.split(" ");
+            // Count used for match counting purposes
+            var count = 0;
 
             // RegEx breakdown:
             // ^ starts us at the beginning of the input
@@ -344,9 +346,6 @@ var TSOS;
 
             // Haha, regHex, get it?
             var regHex = /^[0-9A-F]+$/i;
-
-            // Count used for match counting purposes
-            var count = 0;
 
             // Loop through the array and test all of that juicy input
             for (i = 0; i <= inputArray.length; i++) {

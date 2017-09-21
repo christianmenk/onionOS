@@ -129,7 +129,7 @@ var TSOS;
         /*                                           TAB COMPLETION
             Tab completion function works through iterations of the command list and pushing matches to the
             multipleMatches array, then analyzing the results of the array based on number of matches (the array
-            length) and producing output based off of the results!!
+            length) and producing output based off of the results
                                                                                                                  */
         Console.prototype.tabMatch = function (){
                 // Two variables, an array for possible matches and a string for storing
@@ -140,7 +140,6 @@ var TSOS;
                 for (var i = 0; i < _OsShell.commandList.length; i++) {
                     // Get next command in commandList
                     var cmd = _OsShell.commandList[i].command;
-
                     // If the 'cmd' matches the buffer, push it to the multipleMatches array
                     if (this.buffer === cmd.substr(0, this.buffer.length)) {
                         multipleMatches.push(cmd);
