@@ -327,20 +327,42 @@ var TSOS;
         };
 
 
-        // Validates the user input using a simple regex command
-        // If you would prefer me to not use regex, I can redo this a different way
-        // Based off of my research this is the most simple way without a few for loops
-        Shell.prototype.shellLoad = function (){
-          var userInput = document.getElementById("taProgramInput").value;
-          // Haha, get it?
-          var regHex = /[0-9A-Fa-f]{6}/g;
-          if(regHex.test(userInput.trim())){
-              _StdOut.putText("User Program Input is valid hexadecimal.")
-          } else {
-              _StdOut.putText("User Program Input is not valid hexadecimal.")
-              _StdOut.advanceLine();
-              _StdOut.putText("You disappoint me.")
-          }
+        // Validates the user input using a simple regex function and a for loop
+        // Loops the input through an array of what was entered and tests it with the regex function
+        // If every element of the array passes the test, then print valid, else, print invalid
+        Shell.prototype.shellLoad = function () {
+            var userInput = document.getElementById("taProgramInput").value.trim();
+            var inputArray = userInput.split(" ");
+
+            // RegEx breakdown:
+            // ^ starts us at the beginning of the input
+            // [0-9A-F] checks if each char is either between 0-9 or A-F
+            // + matches the string as many times as possible
+            // i globally ignores the case of the input
+            // $ marks ending of input
+
+            // Haha, regHex, get it?
+            var regHex = /^[0-9A-F]+$/i;
+
+            // Count used for match counting purposes
+            var count = 0;
+
+            for (i = 0; i <= inputArray.length; i++) {
+                if (regHex.test(inputArray[i])) {
+                    count++;
+                } else {
+                    break;
+                }
+            }
+
+            // See if every elements of inputArray passed
+            if (count === inputArray.length) {
+                _StdOut.putText("User Program Input is valid hexadecimal.");
+             } else {
+                _StdOut.putText("User Program Input is not valid hexadecimal.");
+                _StdOut.advanceLine();
+                _StdOut.putText("You disappoint me.")
+            }
         };
 
 
