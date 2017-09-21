@@ -67,6 +67,8 @@ var TSOS;
                     this.historyIndex += 1;
                     this.getCommand();
 
+                } else if (chr === String.fromCharCode(9)){
+                    this.tabMatch();
                 }
 
                 // Normal letters
@@ -108,7 +110,7 @@ var TSOS;
                 _DrawingContext.fontDescent(this.currentFont, this.currentFontSize) +
                 _FontHeightMargin;
 
-            /*                                   -- SCROLLING --
+            /*                                      SCROLLING
                 Take snapshot of canvas using getImageData using the current font size as an offset
                 if the Y position exceeds the canvas height. Then, use putImageData to place the offset'd
                 (is that a word?) snapshot back onto the canvas, then reassign the Y position.
@@ -121,11 +123,67 @@ var TSOS;
 
         };
 
+
+        /*                                           TAB COMPLETION
+            Tab completion function works through iterations of the command list and pushing matches to the
+            multipleMatches array, then analyzing the results of the array based on number of matches (the array
+            length) and producing output based off of the results!!
+                                                                                                                 */
+        Console.prototype.tabMatch = function (){
+                // Two variables, an array for possible matches and a string for storing
+                var multipleMatches = new Array();
+                var match;
+
+                // Iterate through possible matches in the commandList
+                for (var i = 0; i < _OsShell.commandList.length; i++) {
+                    // Get next command in commandList
+                    var cmd = _OsShell.commandList[i].command;
+
+                    // If the 'cmd' matches the buffer, push it to the multipleMatches array
+                    if (this.buffer === cmd.substr(0, this.buffer.length)) {
+                        multipleMatches.push(cmd);
+                        // Trim the matched command so letter(s) will not be duplicated
+                         match = cmd.slice(this.buffer.length);
+                    }
+                }
+
+                // If no matches, alert the user
+                if(multipleMatches.length === 0) {
+                    this.advanceLine();
+                    this.putText("No available commands.");
+                    this.advanceLine();
+                    _OsShell.putPrompt();
+                    // Reset the buffer
+                    this.buffer = "";
+
+                    // If one match, complete the command
+                } else if (multipleMatches.length === 1) {
+                    this.buffer = this.buffer + match;
+                    this.putText(match);
+
+                    // If multiple matches, list possible commands
+                } else if (multipleMatches.length > 1) {
+                    this.advanceLine();
+                    this.putText("Available commands: ");
+                    this.advanceLine();
+                    for (var i = 0; i < multipleMatches.length; i++) {
+                        this.putText(multipleMatches[i]);
+                        this.advanceLine();
+                    }
+                    // Reset prompt and re-display user input
+                    _OsShell.putPrompt();
+                    this.putText(this.buffer);
+                }
+        };
+
+        // Function used for handling the historyIndex and displaying the cmdHistory array elements
+        // Honestly it could be improved it looks kinda gross
         Console.prototype.getCommand = function (type){
             this.removeLine();
             if(this.cmdHistory.length === 0){
                 this.historyIndex = 0;
             }
+
             if (this.historyIndex < 0){
                 this.historyIndex = 0;
             } else if (this.historyIndex >= this.cmdHistory.length){
@@ -136,6 +194,7 @@ var TSOS;
             this.putText(this.buffer);
         };
 
+        // Had to make this to use with the getCommand function, originally I thought it existed but to my demise it did not
         Console.prototype.removeLine = function() {
             if(this.buffer.length !== 0) {
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, this.buffer);
