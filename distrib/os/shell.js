@@ -77,6 +77,9 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellError, "rip", "- Tests kernel shutdown due to OS error.");
             this.commandList[this.commandList.length] = sc;
 
+            // Load, validates the hex code in the program input box
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the hexadecimal input in User Program Input");
+            this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -275,6 +278,8 @@ var TSOS;
             }
         };
 
+        // Originally made these globals to use with the other time function, but they wouldn't actively refresh
+        // because they're only instantiated once
         Shell.prototype.shellDate = function (args) {
             var date = new Date();
             var hour = date.getHours();
@@ -290,18 +295,25 @@ var TSOS;
             _StdOut.putText(dateString);
         };
 
+        // Onions!!
         Shell.prototype.shellLoc = function (args) {
             _StdOut.putText("The Stormlands, Home of the Onion Knight.");
         };
 
+        // I hope you know who this even is
         Shell.prototype.shellOnion = function (args) {
             document.getElementById("davos").style.visibility = "visible";
         };
 
+        // Sets the status label in the task bar
         Shell.prototype.shellStatus = function (args) {
             if (args.length > 0) {
+
+                // Doesn't this look great? It replaces the commas with spaces to make it look nice
                 _Status = args.toString().replace(/,/g,' ');
                 var statusLabel = document.getElementById('status');
+
+                // Make the user feel like they are a programmer
                 statusLabel.innerText = '[' + _Status + ']';
             }
             else {
@@ -309,8 +321,26 @@ var TSOS;
             }
         };
 
-        Shell.prototype.shellError = function (args) {
+        // Tests the BSoD with a harmless error message
+        Shell.prototype.shellError = function () {
             _Kernel.krnTrapError("Testing function called - no real errors present");
+        };
+
+
+        // Validates the user input using a simple regex command
+        // If you would prefer me to not use regex, I can redo this a different way
+        // Based off of my research this is the most simple way without a few for loops
+        Shell.prototype.shellLoad = function (){
+          var userInput = document.getElementById("taProgramInput").value;
+          // Haha, get it?
+          var regHex = /[0-9A-Fa-f]{6}/g;
+          if(regHex.test(userInput.trim())){
+              _StdOut.putText("User Program Input is valid hexadecimal.")
+          } else {
+              _StdOut.putText("User Program Input is not valid hexadecimal.")
+              _StdOut.advanceLine();
+              _StdOut.putText("You disappoint me.")
+          }
         };
 
 
