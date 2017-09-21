@@ -326,10 +326,11 @@ var TSOS;
             _Kernel.krnTrapError("Testing function called - no real errors present");
         };
 
-
-        // Validates the user input using a simple regex function and a for loop
-        // Loops the input through an array of what was entered and tests it with the regex function
-        // If every element of the array passes the test, then print valid, else, print invalid
+        /*                           HEX VALIDATION
+         Validates the user input using a simple regex function and a for loop. Loops the input
+          through an array of what was entered and tests it with the regex function. If every
+          element of the array passes the test, then print valid, else, print invalid.
+                                                                                              */
         Shell.prototype.shellLoad = function () {
             var userInput = document.getElementById("taProgramInput").value.trim();
             var inputArray = userInput.split(" ");
@@ -338,8 +339,8 @@ var TSOS;
             // ^ starts us at the beginning of the input
             // [0-9A-F] checks if each char is either between 0-9 or A-F
             // + matches the string as many times as possible
-            // i globally ignores the case of the input
             // $ marks ending of input
+            // i globally ignores the case of the input
 
             // Haha, regHex, get it?
             var regHex = /^[0-9A-F]+$/i;
@@ -347,6 +348,7 @@ var TSOS;
             // Count used for match counting purposes
             var count = 0;
 
+            // Loop through the array and test all of that juicy input
             for (i = 0; i <= inputArray.length; i++) {
                 if (regHex.test(inputArray[i])) {
                     count++;

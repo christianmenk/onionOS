@@ -66,7 +66,7 @@ var TSOS;
 
             // Handle special input
             } else if ((keyCode === 8) || (keyCode === 38) || (keyCode === 40) || (keyCode === 9)) {
-                _KernelInputQueue.enqueue(String.fromCharCode(keyCode));
+                _KernelInputQueue.enqueue(keyCode);
 
             }
         };
