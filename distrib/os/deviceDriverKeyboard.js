@@ -52,6 +52,7 @@ var TSOS;
                 (keyCode === 13)) {
 
                 //Use numCharHandler to determine if the user is entering a number or a symbol
+
                 chr = numCharHandler(keyCode, isShifted);
                 _KernelInputQueue.enqueue(chr);
 
