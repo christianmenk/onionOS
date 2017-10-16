@@ -51,7 +51,16 @@ h3 {
 
 textarea {
   border: solid mediumpurple;
+  background-color:#faefff;
 }
+
+table {
+  border: solid mediumpurple;
+  border-width:3px;
+  background-color:#faefff;
+}
+
+
 
 .footerText {
   color: black;

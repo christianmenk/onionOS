@@ -32,7 +32,7 @@
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
    <!-- Uncomment the line below to enable GLaDOS testing. -->
-   <script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip1.js"></script>
+   <!--<script type="text/javascript" src="http://alanclasses.github.io/TSOS/test/glados-ip1.js"></script> -->
    
 </head>
 
@@ -79,13 +79,45 @@
 
    </div>
 
-   <div id="divConsole" style="margin:4px; width:500px; height:567px; float:left;" >
+   <div id="divConsole" style="margin:4px; width:500px; height:582px; float:left;" >
    <canvas id="display"
            width="500px"
-           height="567px"
+           height="582px"
            tabindex="3">
    </canvas>
-</div>
+
+       <br>
+
+       <label>
+           Memory
+           <br>
+           <table id="memoryTable" style="width:500px;height:130px">
+           </table>
+       </label>
+
+    </div>
+
+    <div id="cpu" style="margin-left: 520px">
+        <label>
+            CPU
+            <br>
+            <table id="cpuTable" style="width:364px;height:50px">
+            </table>
+        </label>
+    </div>
+
+    <br>
+
+    <div id="memory" style="margin-left: 520px">
+        <label>
+            Processes
+            <br>
+            <table id="pcbTable" style="width:364px;height:50px">
+            </table>
+        </label>
+    </div>
+
+    <br>
 
    <div id="divLog" style="margin-left:520px;">
       <label>
@@ -102,6 +134,7 @@
       </label>
    </div>
 
+
    <div id="divUserProgramInput" style="margin-left:520px;">
       <label>
          User Program Input
@@ -112,11 +145,11 @@
                    cols="48"
          ></textarea>
       </label>
-
-
    </div>
-</div>
 
+    <br>
+
+</div>
 
 
 

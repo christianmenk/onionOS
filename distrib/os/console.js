@@ -99,6 +99,7 @@ var TSOS;
                 var offset = _DrawingContext.measureText(this.currentFont, this.currentFontSize, text);
                 this.currentXPosition = this.currentXPosition + offset;
 
+
             }
         };
         Console.prototype.advanceLine = function () {
