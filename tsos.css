@@ -56,8 +56,19 @@ textarea {
 
 table {
   border: solid mediumpurple;
+  border-collapse: collapse;
   border-width:3px;
   background-color:#faefff;
+}
+
+th, td {
+  text-align: center;
+  border: 1px solid mediumpurple;
+  border-collapse: collapse;
+}
+
+th {
+  font-size: 15px;
 }
 
 
