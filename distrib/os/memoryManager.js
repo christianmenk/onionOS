@@ -10,6 +10,23 @@ var TSOS;
             this.updateMemory();
         };
 
+        MemoryManager.prototype.load = function (hex){
+            // Init can be used to reset memory for new functions being entered
+            this.memory.initMemory();
+            // Split user input into an array
+            var hexArray = hex.split(" ");
+
+            // Add new hex array to memory
+            for(var i = 0; i < hexArray.length; i++){
+                this.memory.storedData[i] = hexArray[i];
+            }
+            // Update the memory table
+            this.updateMemory();
+
+            this.pcb = new TSOS.Pcb(0);
+
+        };
+
         // Used to update the HTML memory element through the use of jQuery replace methods
         // Using innerhtml would've required me to create the whole table (I think), not good for future project reqs
         MemoryManager.prototype.updateMemory = function() {
@@ -21,21 +38,19 @@ var TSOS;
                 // Creating table header
                 if (i % 8 === 0) {
                     var header = i.toString(16).toUpperCase();
-
                     // Adds preceding 0's
                     while(header.length < (this.memory.totalMemory.toString(16)).length){
                         header = '0' + header;
                     }
                     header = "0x" + header;
-
                     // Ends the row if it isn't the first one
                     if(i !== 0){
                         html += '</tr>';
                     }
-
                     // Writes the header
                     html += '<tr><td><b>' + header + '</b></td>';
                 }
+                // Add all other table elements
                 html += '<td id="' + "memCell" + i + '"> ' + this.memory.storedData[i] + '</td>';
             }
             html += "</tbody>";
