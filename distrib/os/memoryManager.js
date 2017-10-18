@@ -11,19 +11,32 @@ var TSOS;
         };
 
         MemoryManager.prototype.load = function (hex){
-            // Init can be used to reset memory for new functions being entered
-            this.memory.initMemory();
             // Split user input into an array
             var hexArray = hex.split(" ");
 
-            // Add new hex array to memory
-            for(var i = 0; i < hexArray.length; i++){
-                this.memory.storedData[i] = hexArray[i];
-            }
-            // Update the memory table
-            this.updateMemory();
+            // Make sure the program can fit into memory
+            if(this.memory.storedData.length < hexArray.length){
+                _StdOut.putText("The program is too large to fit into memory.");
+            } else {
 
-            this.pcb = new TSOS.Pcb(0);
+                // Init can be used to reset memory for new functions being entered
+                this.memory.initMemory();
+
+                // Add new hex array to memory
+                for (var i = 0; i < hexArray.length; i++) {
+                    this.memory.storedData[i] = hexArray[i];
+                }
+                // Update the memory table
+                this.updateMemory();
+
+                this.pcb = new TSOS.Pcb(_PID);
+                this.pcb.state = "Ready";
+                _PID++;
+                this.pcb.updatePcb();
+
+                _StdOut.putText("Program loaded: PID " + this.pcb.PID);
+            }
+
 
         };
 

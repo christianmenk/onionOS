@@ -44,6 +44,8 @@ var _OsShell;
 // Memory
 var _MemoryManager;
 
+// Processes
+var _PID = 0;
 // At least this OS is not trying to kill you. (Yet.)
 var _SarcasticMode = false;
 // Global Device Driver Objects - page 12

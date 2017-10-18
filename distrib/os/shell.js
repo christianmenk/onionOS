@@ -358,7 +358,8 @@ var TSOS;
 
             // See if every elements of inputArray passed
             if (count === inputArray.length) {
-                _StdOut.putText("User Program Input is valid hexadecimal.");
+                _StdOut.putText("Loading program into memory...");
+                _StdOut.advanceLine();
                 _MemoryManager.load(userInput);
              } else {
                 _StdOut.putText("User Program Input is not valid hexadecimal.");
