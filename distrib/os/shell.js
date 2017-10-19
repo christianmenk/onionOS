@@ -78,7 +78,11 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             // Load, validates the hex code in the program input box
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Validates the hexadecimal input in User Program Input");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Loads user input into memory.");
+            this.commandList[this.commandList.length] = sc;
+
+            // prompt <string>
+            sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - Runs program with specified PID.");
             this.commandList[this.commandList.length] = sc;
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
@@ -326,7 +330,7 @@ var TSOS;
             _Kernel.krnTrapError("Testing function called - no real errors present");
         };
 
-        /*                           HEX VALIDATION
+        /*                           LOADING AND HEX VALIDATION
          Validates the user input using a simple regex function and a for loop. Loops the input
           through an array of what was entered and tests it with the regex function. If every
           element of the array passes the test, then print valid, else, print invalid.
@@ -365,6 +369,19 @@ var TSOS;
                 _StdOut.putText("User Program Input is not valid hexadecimal.");
                 _StdOut.advanceLine();
                 _StdOut.putText("You disappoint me.")
+            }
+        };
+
+        // This will need to be refactored in future projects, but it suits our purposes for now
+        Shell.prototype.shellRun = function (args) {
+
+
+            if (args[0] == _PID) {
+                _StdOut.putText("Executing program with PID: " + _PID );
+               _CPU.isExecuting = true;
+            }
+            else {
+                _StdOut.putText("Please provide a valid PID.");
             }
         };
 

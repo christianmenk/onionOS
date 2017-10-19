@@ -77,5 +77,54 @@ function StopTime(){
     clearTimeout(_Timeout);
 }
 
+function updateCpu(){
+    $('#cpuPC').html(_CPU.PC);
+    $('#cpuAcc').html(_CPU.Acc);
+    $('#cpuX').html(_CPU.Xreg);
+    $('#cpuY').html(_CPU.Yreg);
+    $('#cpuZ').html(_CPU.Zflag);
+}
 
+function updatePcb(pcb){
+    $('#pcbPID').html(pcb.PID);
+    $('#pcbState').html(pcb.state);
+    $('#pcbPC').html(pcb.PC);
+    $('#pcbAcc').html(pcb.Acc);
+    $('#pcbX').html(pcb.Xreg);
+    $('#pcbY').html(pcb.Yreg);
+    $('#pcbZ').html(pcb.Zflag);
+    $('#pcbBase').html(pcb.base);
+    $('#pcbLimit').html(pcb.limit);
+}
 
+// Used to update the HTML memory element through the use of jQuery replace methods
+// Using innerhtml would've required me to create the whole table (I think), not good for future project reqs
+function updateMemory(memory){
+    var table = $('#memoryTable');
+    var html = "<tbody>";
+
+    // For loop is used to loop through the totalMemory size and populate the table accordingly
+    for (var i = 0; i < memory.totalMemory; i++) {
+        // Creating table header
+        if (i % 8 === 0) {
+            var header = i.toString(16).toUpperCase();
+            // Adds preceding 0's
+            while(header.length < (memory.totalMemory.toString(16)).length){
+                header = '0' + header;
+            }
+            header = "0x" + header;
+            // Ends the row if it isn't the first one
+            if(i !== 0){
+                html += '</tr>';
+            }
+            // Writes the header
+            html += '<tr><td><b>' + header + '</b></td>';
+        }
+        // Add all other table elements
+        html += '<td id="' + "memCell" + i + '"> ' + memory.storedData[i] + '</td>';
+    }
+    html += "</tbody>";
+
+    // This will replace the entire body each time updateMemory is called
+    table.find('tbody').replaceWith(html);
+}

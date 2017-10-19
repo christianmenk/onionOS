@@ -37,12 +37,21 @@ var TSOS;
             this.Yreg = 0;
             this.Zflag = 0;
             this.isExecuting = false;
+
+            updateCpu();
         };
+
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
-            // Do the real work here. Be sure to set this.isExecuting appropriately.
+            this.executeProgram(_Program.PC);
+
         };
+
+        Cpu.prototype.executeProgram = function (program){
+
+        };
+
         return Cpu;
     })();
     TSOS.Cpu = Cpu;

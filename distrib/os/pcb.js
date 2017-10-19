@@ -13,18 +13,6 @@ var TSOS;
             this.limit = 0;
         }
 
-        Pcb.prototype.updatePcb = function (){
-          $('#pcbPID').html(this.PID);
-          $('#pcbState').html(this.state);
-          $('#pcbPC').html(this.PC);
-          $('#pcbAcc').html(this.Acc);
-          $('#pcbX').html(this.Xreg);
-          $('#pcbY').html(this.Yreg);
-          $('#pcbZ').html(this.Zflag);
-          $('#pcbBase').html(this.base);
-          $('#pcbLimit').html(this.limit);
-        };
-
         return Pcb;
     })();
     TSOS.Pcb = Pcb;
