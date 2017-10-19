@@ -45,11 +45,15 @@ var TSOS;
                 _StdOut.putText("Program loaded: PID " + this.pcb.PID);
             }
 
-            MemoryManager.prototype.convertToDecimal = function (hex){
+            MemoryManager.prototype.convert = function (hex){
                 return parseInt(hex, 16);
             }
 
 
+        };
+
+        MemoryManager.prototype.insertData = function (data, location){
+                this.memory.storedData[location] = data.toUpperCase();
         };
 
         return MemoryManager;

@@ -51,6 +51,7 @@ var TSOS;
 
             updateCpu();
             updatePcb();
+            updateMemory(_MemoryManager.memory);
     };
 
         // Execute program function
@@ -61,54 +62,119 @@ var TSOS;
             if(this.PC < _ProgramLength) {
                 switch(hex) {
                     case "A9":
-                     this.Acc = _MemoryManager
+                        // load acc with constant
+                     this.loadAccConstant();
+                     break;
                     case "AD":
                     // load acc from memory
+                    this.loadAccFromMemory();
+                        break;
                     case "8D":
                     // store acc in memory
+                    this.storeAccInMemory();
+                        break;
                     case "6D":
                     // add with carry
+                        this.addWithCarry();
+                        break;
                     case "A2":
                     // load xreg with constant
+                        this.loadXregConstant();
+                        break;
                     case "AE":
                     //load xreg from mem
+                        this.loadXregFromMemory();
+                        break;
                     case "A0":
                     // load yreg with constant
+                        this.loadYregConstant();
+                        break;
                     case "AC":
                     // load yreg from memory
+                        this.loadYregFromMemory();
+                        break;
                     case "EA":
                     // no operation
+                        break;
                     case "00":
-                    // break
+                        this.break();
+                        break;
                     case "EC":
                     // compare byte in memory to xreg, sets zflag if equal
+                        break;
                     case "D0":
                     // branch n bytes if z flag = 0
+                        break;
                     case "EE":
                     // increment value of a byte
+                        break;
                     case "FF":
                     // system call
+                        break;
                     default:
                         //unknown op code
                         break;
                 }
-
-                }
-                _StdOut.putText(hex);
-                _StdOut.advanceLine();
                 this.PC++;
-            } else {
-                this.isExecuting = false;
-                this.PC = 0;
-                updateCpu();
-                updatePcb();
-                _StdOut.putText("Execution complete.");
-                _CurrentProgram.state = "Complete";
-                _StdOut.advanceLine();
-                _StdOut.putText(_OsShell.promptStr);
             }
-
         };
+
+        Cpu.prototype.loadAccConstant = function(){
+            this.Acc = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+        };
+
+        Cpu.prototype.loadAccFromMemory = function(){
+            this.Acc = this.getDataAtAddress(this.getMemoryAddress());
+        };
+
+        Cpu.prototype.storeAccInMemory = function(){
+            _MemoryManager.insertData(this.Acc.toString(16), this.getMemoryAddress());
+        };
+
+        Cpu.prototype.addWithCarry = function(){
+            this.Acc = this.Acc + this.getDataAtAddress();
+        };
+
+        Cpu.prototype.loadXregConstant = function(){
+            this.Xreg = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+        };
+
+        Cpu.prototype.loadXregFromMemory = function(){
+            this.Xreg = this.getDataAtAddress(this.getMemoryAddress());
+        };
+
+        Cpu.prototype.loadYregConstant = function(){
+            this.Yreg = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+        };
+
+        Cpu.prototype.loadYregFromMemory = function(){
+            this.Yreg = this.getDataAtAddress(this.getMemoryAddress());
+        };
+
+        Cpu.prototype.getMemoryAddress = function(){
+            var firstLoc = _MemoryManager.memory.storedData[++this.PC];
+            var secondLoc = _MemoryManager.memory.storedData[++this.PC];
+            var location = secondLoc + firstLoc;
+            return location;
+        };
+
+        Cpu.prototype.getDataAtAddress = function (location){
+            return _MemoryManager.memory.storedData[location];
+        };
+
+        Cpu.prototype.break = function (){
+            _CurrentProgram.PC = this.PC;
+            _CurrentProgram.Acc = this.Acc;
+            _CurrentProgram.Xreg = this.Xreg;
+            _CurrentProgram.Yreg = this.Yreg;
+            _CurrentProgram.Yreg = this.Yreg;
+            _CurrentProgram.state = "Terminated";
+
+            updateCpu();
+            updatePcb();
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK))
+        };
+
 
         return Cpu;
     })();
