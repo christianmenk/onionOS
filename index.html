@@ -43,179 +43,178 @@
 
 <body onload="onDocumentLoad()">
 
-<div id="divStatusBar">
-   <h1> Onion OS </h1>
-   <label id="status" style="padding-left: 23em">[Stopped]</label>
-</div>
-
-<div id="divMain" style="width:100%;">
-
-   <div id="divButtonBar" style="margin:4px;">
-      <input type="button"
-             id = "btnStartOS"
-             name="brnStartOS"
-             class="normal_button"
-             value="Start"
-             tabindex="0"
-             onclick="TSOS.Control.hostBtnStartOS_click(this);">
-
-      <input type="button"
-             id = "btnHaltOS"
-             name="brnHaltOS"
-             class="normal_button"
-             disabled="disabled"
-             value="Halt"
-             tabindex="1"
-             onclick="TSOS.Control.hostBtnHaltOS_click(this);">
-
-      <input type="button"
-             id = "btnReset"
-             name="brnReset"
-             class="normal_button"
-             disabled="disabled"
-             value="Reset"
-             tabindex="2"
-             onclick="TSOS.Control.hostBtnReset_click(this);">
-
-           <label id="time" style="padding-left: 13em">00:00:00</label>
-           <br>
-           <label id="date" style="padding-left: 31.5em;">00/00/0000</label>
-
-
-   </div>
-
-   <div id="divConsole" style="margin:4px; width:583px; height:582px; float:left;" >
-   <canvas id="display"
-           width="583px"
-           height="582px"
-           tabindex="3">
-   </canvas>
-
-       <br>
-
-       <label>
-           Memory
-           <br>
-           <div style="height:147px; width:600px; overflow-y:scroll;">
-               <table id="memoryTable" style="width:583px;height:147px;">
-                   <tbody>
-                   <td>Memory will be initialized on start</td>
-                   </tbody>
-               </table>
-           </div>
-       </label>
-
-
+    <div id="divStatusBar">
+       <h1> Onion OS </h1>
+       <label id="status" style="padding-left: 23em">[Stopped]</label>
     </div>
 
-    <div id="divLog" style="margin-left:600px;">
-        <label>
-            Host Log
-            <br>
-            <textarea name="taHostLog"
-                      id  ="taHostLog"
-                      rows="16"
-                      cols="48"
-            ></textarea>
+    <div id="divMain" style="width:100%;">
+
+       <div id="divButtonBar" style="margin:4px;">
+          <input type="button"
+                 id = "btnStartOS"
+                 name="brnStartOS"
+                 class="normal_button"
+                 value="Start"
+                 tabindex="0"
+                 onclick="TSOS.Control.hostBtnStartOS_click(this);">
+
+          <input type="button"
+                 id = "btnHaltOS"
+                 name="brnHaltOS"
+                 class="normal_button"
+                 disabled="disabled"
+                 value="Halt"
+                 tabindex="1"
+                 onclick="TSOS.Control.hostBtnHaltOS_click(this);">
+
+          <input type="button"
+                 id = "btnReset"
+                 name="brnReset"
+                 class="normal_button"
+                 disabled="disabled"
+                 value="Reset"
+                 tabindex="2"
+                 onclick="TSOS.Control.hostBtnReset_click(this);">
+
+               <label id="time" style="padding-left: 13em">00:00:00</label>
+               <br>
+               <label id="date" style="padding-left: 31.5em;">00/00/0000</label>
 
 
-        </label>
-    </div>
+       </div>
 
-    <div id="cpu" style="margin-left: 600px">
-        <label>
-            CPU
-            <br>
-            <table id="cpuTable" style="width:364px;height:50px">
-                <thead>
-                <tr>
-                    <th>PC</th>
-                    <th>Acc</th>
-                    <th>X-Reg</th>
-                    <th>Y-Reg</th>
-                    <th>Z-Reg</th>
-                </tr>
-                </thead>
-                <tbody>
+       <div id="divConsole" style="margin:4px; width:583px; height:582px; float:left;" >
+       <canvas id="display"
+               width="583px"
+               height="582px"
+               tabindex="3">
+       </canvas>
+
+           <br>
+
+           <label>
+               Memory
+               <br>
+               <div style="height:147px; width:600px; overflow-y:scroll;">
+                   <table id="memoryTable" style="width:583px;height:147px;">
+                       <tbody>
+                       <td>Memory will be initialized on start</td>
+                       </tbody>
+                   </table>
+               </div>
+           </label>
+
+        </div>
+
+        <div id="divLog" style="margin-left:600px;">
+            <label>
+                Host Log
+                <br>
+                <textarea name="taHostLog"
+                          id  ="taHostLog"
+                          rows="16"
+                          cols="48"
+                ></textarea>
+
+            </label>
+        </div>
+
+        <div id="cpu" style="margin-left: 600px">
+            <label>
+                CPU
+                <br>
+                <table id="cpuTable" style="width:364px;height:50px">
+                    <thead>
                     <tr>
-                        <td id="cpuPC"></td>
-                        <td id="cpuAcc"></td>
-                        <td id="cpuX"></td>
-                        <td id="cpuY"></td>
-                        <td id="cpuZ"></td>
+                        <th>PC</th>
+                        <th>Acc</th>
+                        <th>X-Reg</th>
+                        <th>Y-Reg</th>
+                        <th>Z-Reg</th>
                     </tr>
-                </tbody>
-            </table>
-        </label>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="cpuPC"></td>
+                            <td id="cpuAcc"></td>
+                            <td id="cpuX"></td>
+                            <td id="cpuY"></td>
+                            <td id="cpuZ"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </label>
+        </div>
+
+        <br>
+
+        <div id="memory" style="margin-left: 600px">
+            <label>
+                Processes
+                <br>
+                <table id="pcbTable" style="width:364px;height:50px">
+                    <thead>
+                    <tr>
+                        <th>PID</th>
+                        <th>State</th>
+                        <th>PC</th>
+                        <th>Acc</th>
+                        <th>X-Reg</th>
+                        <th>Y-Reg</th>
+                        <th>Z-Reg</th>
+                        <th>Base</th>
+                        <th>Limit</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td id="pcbPID"></td>
+                        <td id="pcbState"></td>
+                        <td id="pcbPC"></td>
+                        <td id="pcbAcc"></td>
+                        <td id="pcbX"></td>
+                        <td id="pcbY"></td>
+                        <td id="pcbZ"></td>
+                        <td id="pcbBase"></td>
+                        <td id="pcbLimit"></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </label>
+        </div>
+
+        <br>
+
+
+        <div id = "inputDiv" style="margin-left: 600px">
+            <label>
+                User Program Input
+                <br>
+                <textarea name="taProgramInput"
+                          id  ="taProgramInput"
+                          rows="8"
+                          cols="48"
+                ></textarea>
+            </label>
+        </div>
+
+        <div id="onionDiv" style="margin-left: 620px">
+            <img id="davos" src="distrib/images/knight.jpg" style="width:400px; height:200px; visibility: hidden;" >
+        </div>
+
+
     </div>
 
-    <br>
-
-    <div id="memory" style="margin-left: 600px">
-        <label>
-            Processes
-            <br>
-            <table id="pcbTable" style="width:364px;height:50px">
-                <thead>
-                <tr>
-                    <th>PID</th>
-                    <th>State</th>
-                    <th>PC</th>
-                    <th>Acc</th>
-                    <th>X-Reg</th>
-                    <th>Y-Reg</th>
-                    <th>Z-Reg</th>
-                    <th>Base</th>
-                    <th>Limit</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td id="pcbPID"></td>
-                    <td id="pcbState"></td>
-                    <td id="pcbPC"></td>
-                    <td id="pcbAcc"></td>
-                    <td id="pcbX"></td>
-                    <td id="pcbY"></td>
-                    <td id="pcbZ"></td>
-                    <td id="pcbBase"></td>
-                    <td id="pcbLimit"></td>
-                </tr>
-
-                </tbody>
-            </table>
-        </label>
-    </div>
-
-    <br>
-
-
-    <div id = "inputDiv" style="margin-left: 600px">
-        <label>
-            User Program Input
-            <br>
-            <textarea name="taProgramInput"
-                      id  ="taProgramInput"
-                      rows="8"
-                      cols="48"
-            ></textarea>
-        </label>
-    </div>
-
-    <div id="onionDiv" style="margin-left: 620px">
-        <img id="davos" src="distrib/images/knight.jpg" style="width:400px; height:200px; visibility: hidden;" >
-    </div>
-
-
-</div>
-
-<p class="footerText" style="clear:both;">
-   <br>
-   Copyright &copy; 2008 - 2016 No Rights Reserved.
-   <br>
-   Reproduction is inhibited without the express written consent of
-   Ted Codd, Stevie Ray Vaughan, Ian Fleming, and Ser Davos Seaworth (The Onion Knight).
-</p>
+    <p class="footerText" style="clear:both;">
+        <br>
+        Copyright &copy; 2008 - 2016 No Rights Reserved.
+        <br>
+        Reproduction is inhibited without the express written consent of
+        Ted Codd, Stevie Ray Vaughan, Ian Fleming, and Ser Davos Seaworth (The Onion Knight).
+    </p>
 
 </body>
+
 </html>

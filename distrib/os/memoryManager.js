@@ -22,6 +22,7 @@ var TSOS;
                 // Init can be used to reset memory for new functions being entered
                 this.memory.initMemory();
 
+                _ProgramLength = hexArray.length;
                 // Add new hex array to memory
                 for (var i = 0; i < hexArray.length; i++) {
                     this.memory.storedData[i] = hexArray[i];
@@ -35,7 +36,7 @@ var TSOS;
 
                 this.pcb = new TSOS.Pcb(_PID);
                 this.pcb.state = "Ready";
-                _Program = this.pcb;
+                _CurrentProgram = this.pcb;
 
 
                 // Update pcb display

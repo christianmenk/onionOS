@@ -46,10 +46,11 @@ var _MemoryManager;
 
 
 // Processes
-
 // Couldn't think of a better way to do this for now, will refactor
 var _PID = -1;
-var _Program = null;
+var _CurrentProgram = null;
+var _ProgramLength = 0;
+
 // At least this OS is not trying to kill you. (Yet.)
 var _SarcasticMode = false;
 // Global Device Driver Objects - page 12

@@ -91,7 +91,8 @@ var TSOS;
             this.putPrompt();
         };
         Shell.prototype.putPrompt = function () {
-            _StdOut.putText(this.promptStr);
+            if(_CPU.isExecuting === false)
+                _StdOut.putText(this.promptStr);
         };
         Shell.prototype.handleInput = function (buffer) {
             _Kernel.krnTrace("Shell Command~" + buffer);
@@ -374,7 +375,6 @@ var TSOS;
 
         // This will need to be refactored in future projects, but it suits our purposes for now
         Shell.prototype.shellRun = function (args) {
-
 
             if (args[0] == _PID) {
                 _StdOut.putText("Executing program with PID: " + _PID );
