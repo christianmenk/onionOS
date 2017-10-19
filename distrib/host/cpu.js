@@ -44,16 +44,16 @@ var TSOS;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
-            this.executeProgram();
-        };
+            this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
 
-        Cpu.prototype.executeProgram = function (){
-            for(var i = 0; i < _ProgramLength; i++){
-                _StdOut.putText(_MemoryManager.memory.storedData[i]);
-                _StdOut.advanceLine();
-            }
+            updateCpu();
+    };
 
-            this.isExecuting = false;
+        Cpu.prototype.executeProgram = function (pc){
+            _StdOut.putText(pc);
+            _StdOut.advanceLine();
+            this.PC++;
+
 
         };
 
