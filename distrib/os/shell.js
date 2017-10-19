@@ -334,7 +334,8 @@ var TSOS;
         /*                           LOADING AND HEX VALIDATION
          Validates the user input using a simple regex function and a for loop. Loops the input
           through an array of what was entered and tests it with the regex function. If every
-          element of the array passes the test, then print valid, else, print invalid.
+          element of the array passes the test, then call the memory manager and load the program
+          into memory.
                                                                                               */
         Shell.prototype.shellLoad = function () {
             var userInput = document.getElementById("taProgramInput").value.trim();
@@ -361,7 +362,7 @@ var TSOS;
                 }
             }
 
-            // See if every elements of inputArray passed
+            // See if every elements of inputArray passed, load it into memory if so
             if (count === inputArray.length) {
                 _StdOut.putText("Loading program into memory...");
                 _StdOut.advanceLine();
@@ -373,11 +374,13 @@ var TSOS;
             }
         };
 
-        // This will need to be refactored in future projects, but it suits our purposes for now
+        // Run command:
+        // This command checks to see if the input is = the current PID, and changes the state of the CPU to executing
+        // This triggers the kernel to start a CPU cycle and run the loaded program from memory
         Shell.prototype.shellRun = function (args) {
-
             if (args[0] == _PID) {
                 _StdOut.putText("Executing program with PID: " + _PID );
+                _CurrentProgram.state = "Running";
                _CPU.isExecuting = true;
             }
             else {

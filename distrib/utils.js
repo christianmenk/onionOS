@@ -77,6 +77,7 @@ function StopTime(){
     clearTimeout(_Timeout);
 }
 
+// Function for updating CPU DOM element
 function updateCpu(){
     $('#cpuPC').html(_CPU.PC);
     $('#cpuAcc').html(_CPU.Acc);
@@ -85,20 +86,24 @@ function updateCpu(){
     $('#cpuZ').html(_CPU.Zflag);
 }
 
-function updatePcb(pcb){
-    $('#pcbPID').html(pcb.PID);
-    $('#pcbState').html(pcb.state);
-    $('#pcbPC').html(pcb.PC);
-    $('#pcbAcc').html(pcb.Acc);
-    $('#pcbX').html(pcb.Xreg);
-    $('#pcbY').html(pcb.Yreg);
-    $('#pcbZ').html(pcb.Zflag);
-    $('#pcbBase').html(pcb.base);
-    $('#pcbLimit').html(pcb.limit);
+// Function for updating PCB DOM element
+function updatePcb(){
+    $('#pcbPID').html(_CurrentProgram.PID);
+    $('#pcbState').html(_CurrentProgram.state);
+    $('#pcbPC').html(_CurrentProgram.PC);
+    $('#pcbAcc').html(_CurrentProgram.Acc);
+    $('#pcbX').html(_CurrentProgram.Xreg);
+    $('#pcbY').html(_CurrentProgram.Yreg);
+    $('#pcbZ').html(_CurrentProgram.Zflag);
+    $('#pcbBase').html(_CurrentProgram.base);
+    $('#pcbLimit').html(_CurrentProgram.limit);
 }
 
-// Used to update the HTML memory element through the use of jQuery replace methods
-// Using innerhtml would've required me to create the whole table (I think), not good for future project reqs
+// Function used for updating memory table
+// The memory object is passed as a parameter to reference the array lengths for html generation purposes
+// Jquery made this functionality possible through the use of find/replaceWith, which essentially find an
+// HTML tag and replace it with a paramter. This is perfect for our purposes as it will replace the entire
+// table when updating memory!
 function updateMemory(memory){
     var table = $('#memoryTable');
     var html = "<tbody>";
@@ -108,7 +113,7 @@ function updateMemory(memory){
         // Creating table header
         if (i % 8 === 0) {
             var header = i.toString(16).toUpperCase();
-            // Adds preceding 0's
+            // Adds preceding 0's to the header
             while(header.length < (memory.totalMemory.toString(16)).length){
                 header = '0' + header;
             }
@@ -120,7 +125,7 @@ function updateMemory(memory){
             // Writes the header
             html += '<tr><td><b>' + header + '</b></td>';
         }
-        // Add all other table elements
+        // Add all other table elements from memory
         html += '<td id="' + "memCell" + i + '"> ' + memory.storedData[i] + '</td>';
     }
     html += "</tbody>";

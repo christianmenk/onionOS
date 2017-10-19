@@ -40,9 +40,13 @@ var TSOS;
 
 
                 // Update pcb display
-                updatePcb(this.pcb);
+                updatePcb();
 
                 _StdOut.putText("Program loaded: PID " + this.pcb.PID);
+            }
+
+            MemoryManager.prototype.convertToDecimal = function (hex){
+                return parseInt(hex, 16);
             }
 
 
