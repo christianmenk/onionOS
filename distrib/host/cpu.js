@@ -51,6 +51,7 @@ var TSOS;
 
             updateCpu();
             updatePcb();
+            this.updatePcbVals();
             updateMemory(_MemoryManager.memory);
     };
 
@@ -59,7 +60,7 @@ var TSOS;
         // Utilizes an if to ensure the CPU does not execute any extra unused memory.
         // When complete, sets execution state to false to stop the cpu execution.
         Cpu.prototype.executeProgram = function (hex){
-            if(this.PC < _ProgramLength) {
+
                 switch(hex) {
                     case "A9":
                         // load acc with constant
@@ -101,26 +102,29 @@ var TSOS;
                         break;
                     case "EC":
                     // compare byte in memory to xreg, sets zflag if equal
+                        this.compare();
                         break;
                     case "D0":
                     // branch n bytes if z flag = 0
+                        this.branch();
                         break;
                     case "EE":
                     // increment value of a byte
+                        this.incrementByte();
                         break;
                     case "FF":
-                    // system call
+                        this.systemCall();
                         break;
                     default:
                         //unknown op code
                         break;
                 }
                 this.PC++;
-            }
+
         };
 
         Cpu.prototype.loadAccConstant = function(){
-            this.Acc = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Acc = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         Cpu.prototype.loadAccFromMemory = function(){
@@ -132,11 +136,11 @@ var TSOS;
         };
 
         Cpu.prototype.addWithCarry = function(){
-            this.Acc = this.Acc + this.getDataAtAddress();
+            this.Acc = this.Acc + this.convert(this.getDataAtAddress(this.getMemoryAddress()));
         };
 
         Cpu.prototype.loadXregConstant = function(){
-            this.Xreg = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Xreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         Cpu.prototype.loadXregFromMemory = function(){
@@ -144,18 +148,24 @@ var TSOS;
         };
 
         Cpu.prototype.loadYregConstant = function(){
-            this.Yreg = _MemoryManager.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Yreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         Cpu.prototype.loadYregFromMemory = function(){
             this.Yreg = this.getDataAtAddress(this.getMemoryAddress());
         };
 
+        Cpu.prototype.convert = function (hex){
+            return parseInt(hex, 16);
+        };
+
         Cpu.prototype.getMemoryAddress = function(){
+            // Get the next two location inputs
             var firstLoc = _MemoryManager.memory.storedData[++this.PC];
             var secondLoc = _MemoryManager.memory.storedData[++this.PC];
-            var location = secondLoc + firstLoc;
-            return location;
+            // Flip the two inputs to create the memory address
+            var location = (secondLoc + firstLoc);
+            return this.convert(location);
         };
 
         Cpu.prototype.getDataAtAddress = function (location){
@@ -163,18 +173,55 @@ var TSOS;
         };
 
         Cpu.prototype.break = function (){
-            _CurrentProgram.PC = this.PC;
-            _CurrentProgram.Acc = this.Acc;
-            _CurrentProgram.Xreg = this.Xreg;
-            _CurrentProgram.Yreg = this.Yreg;
-            _CurrentProgram.Yreg = this.Yreg;
-            _CurrentProgram.state = "Terminated";
-
+            this.updatePcbVals();
             updateCpu();
             updatePcb();
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK))
         };
 
+        Cpu.prototype.updatePcbVals = function (){
+            _CurrentProgram.PC = this.PC;
+            _CurrentProgram.Acc = this.Acc;
+            _CurrentProgram.Xreg = this.Xreg;
+            _CurrentProgram.Yreg = this.Yreg;
+            _CurrentProgram.Zflag = this.Zflag;
+            _CurrentProgram.state = "Terminated";
+        };
+
+        Cpu.prototype.compare = function (){
+            var valueFromMem = this.getDataAtAddress(this.getMemoryAddress());
+            if(this.Xreg === valueFromMem){
+                this.Zflag = 1;
+            } else {
+                this.Zflag = 0;
+            }
+        };
+
+        Cpu.prototype.branch = function (){
+            if(this.Zflag === 1){
+                this.PC =  this.convert(_MemoryManager.memory.storedData[++this.PC]) + this.PC + 1;
+            } else {
+                ++this.PC;
+            }
+        };
+
+        Cpu.prototype.incrementByte = function (){
+            var location = this.getMemoryAddress();
+            var byteValue = this.convert(this.getDataAtAddress(location));
+            byteValue++;
+            _MemoryManager.insertData(byteValue.toString(16), location);
+        };
+
+        Cpu.prototype.systemCall = function (){
+          _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
+        };
+
+        Cpu.prototype.terminated = function (){
+            this.init();
+            _StdOut.putText("Execution complete.");
+            _StdOut.advanceLine();
+            _StdOut.putText(_OsShell.promptStr);
+        };
 
         return Cpu;
     })();

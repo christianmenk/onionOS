@@ -113,9 +113,25 @@ var TSOS;
                     break;
                 case CPU_BREAK:
                     _CPU.isExecuting = false;
-                    _StdOut.putText("Execution complete.");
-                    _StdOut.advanceLine();
-                    _StdOut.putText(_OsShell.promptStr);
+                    _CPU.terminated();
+                    break;
+                case SYS_CALL:
+                    if(_CPU.Xreg === 1){
+                        _StdOut.putText(_CPU.Yreg + "");
+                        _StdOut.advanceLine();
+                    } if (_CPU.Xreg === 2){
+
+                        var position = _CPU.Yreg;
+                        var data = _CPU.getDataAtAddress(position);
+                        var newData = "";
+
+                        while (data !== "00"){
+                            newData += String.fromCharCode(_CPU.convert(data));
+                            // Move the pointer and get the next byte of data
+                            data = _CPU.getDataAtAddress(++position);
+                        }
+                        _StdOut.putText(newData + "");
+                        }
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
