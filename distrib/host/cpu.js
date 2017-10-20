@@ -123,42 +123,53 @@ var TSOS;
 
         };
 
+        // Loads the constant into the accumulator from memory (converts it too)
         Cpu.prototype.loadAccConstant = function(){
             this.Acc = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
-
+        // Loads the constant from memory into the accumulator
         Cpu.prototype.loadAccFromMemory = function(){
-            this.Acc = this.getDataAtAddress(this.getMemoryAddress());
+            this.Acc = this.getData(this.getMemoryAddress());
         };
 
+        // Stores acc in memory using the insertData function
         Cpu.prototype.storeAccInMemory = function(){
             _MemoryManager.insertData(this.Acc.toString(16), this.getMemoryAddress());
         };
 
+        // Adds the acc to a specified constant in memory
         Cpu.prototype.addWithCarry = function(){
-            this.Acc = this.Acc + this.convert(this.getDataAtAddress(this.getMemoryAddress()));
+            this.Acc = this.Acc + this.convert(this.getData(this.getMemoryAddress()));
         };
 
+        // Loads the constant into the xreg from memory (converts it too)
         Cpu.prototype.loadXregConstant = function(){
             this.Xreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
 
+        // Loads the constant from memory into the xreg
         Cpu.prototype.loadXregFromMemory = function(){
-            this.Xreg = this.getDataAtAddress(this.getMemoryAddress());
+            this.Xreg = this.getData(this.getMemoryAddress());
         };
 
+        // Loads the constant into the yreg from memory (converts it too)
         Cpu.prototype.loadYregConstant = function(){
             this.Yreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
 
+        // Loads the constant from memory into the yreg
         Cpu.prototype.loadYregFromMemory = function(){
-            this.Yreg = this.getDataAtAddress(this.getMemoryAddress());
+            this.Yreg = this.getData(this.getMemoryAddress());
         };
 
+        // Converts hex into base 10
         Cpu.prototype.convert = function (hex){
             return parseInt(hex, 16);
         };
 
+        // getMemoryAddress
+        // Takes the next two instructions and flips them, then converts them to base 10 and returns
+        // When getting the instructions, this.PC increments so they are not referenced on the next cycle
         Cpu.prototype.getMemoryAddress = function(){
             // Get the next two location inputs
             var firstLoc = _MemoryManager.memory.storedData[++this.PC];
@@ -168,10 +179,12 @@ var TSOS;
             return this.convert(location);
         };
 
-        Cpu.prototype.getDataAtAddress = function (location){
+        // Gets the data from a location in the storedData array
+        Cpu.prototype.getData = function (location){
             return _MemoryManager.memory.storedData[location];
         };
 
+        // Break function sends interrupt and updates everything before terminated the process
         Cpu.prototype.break = function (){
             this.updatePcbVals();
             updateCpu();
@@ -179,6 +192,7 @@ var TSOS;
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK))
         };
 
+        // Updates the Pcb values with the CPU values
         Cpu.prototype.updatePcbVals = function (){
             _CurrentProgram.PC = this.PC;
             _CurrentProgram.Acc = this.Acc;
@@ -188,26 +202,29 @@ var TSOS;
             _CurrentProgram.state = "Terminated";
         };
 
+        // Compares a value to the xreg, if true sets the Zflag to 1
         Cpu.prototype.compare = function (){
-            var valueFromMem = this.getDataAtAddress(this.getMemoryAddress());
-            if(this.Xreg === valueFromMem){
+            var valueFromMem = this.getData(this.getMemoryAddress());
+            if(parseInt(this.Xreg) === parseInt(valueFromMem)){
                 this.Zflag = 1;
             } else {
                 this.Zflag = 0;
             }
         };
 
+        // SUPPOSED TO BRANCH BUT IT WONT
         Cpu.prototype.branch = function (){
-            if(this.Zflag === 1){
-                this.PC =  this.convert(_MemoryManager.memory.storedData[++this.PC]) + this.PC + 1;
+            if(this.Zflag === 0){
+                this.PC +=  this.convert(this.getData(++this.PC)) + 1;
             } else {
                 ++this.PC;
             }
         };
 
+        // Incrememnts byte at a given address by 1
         Cpu.prototype.incrementByte = function (){
             var location = this.getMemoryAddress();
-            var byteValue = this.convert(this.getDataAtAddress(location));
+            var byteValue = this.convert(this.getData(location));
             byteValue++;
             _MemoryManager.insertData(byteValue.toString(16), location);
         };
@@ -216,6 +233,7 @@ var TSOS;
           _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
         };
 
+        // Completed process ending function calls etc
         Cpu.prototype.terminated = function (){
             this.init();
             _StdOut.putText("Execution complete.");

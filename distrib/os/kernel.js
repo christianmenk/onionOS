@@ -122,13 +122,11 @@ var TSOS;
                     } if (_CPU.Xreg === 2){
 
                         var position = _CPU.Yreg;
-                        var data = _CPU.getDataAtAddress(position);
+                        var oldData = _CPU.getData(position);
                         var newData = "";
-
-                        while (data !== "00"){
-                            newData += String.fromCharCode(_CPU.convert(data));
-                            // Move the pointer and get the next byte of data
-                            data = _CPU.getDataAtAddress(++position);
+                        while (oldData !== "00"){
+                            newData += String.fromCharCode(_CPU.convert(oldData));
+                            oldData = _CPU.getData(++position);
                         }
                         _StdOut.putText(newData + "");
                         }
