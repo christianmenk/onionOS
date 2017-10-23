@@ -189,7 +189,7 @@ var TSOS;
             this.updatePcbVals();
             updateCpu();
             updatePcb();
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK))
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
 
         // Updates the Pcb values with the CPU values
@@ -223,9 +223,10 @@ var TSOS;
             }
         };
 
-        // Incrememnts byte at a given address by 1
+        // Increments byte at a given address by 1
         Cpu.prototype.incrementByte = function (){
             var location = this.getMemoryAddress();
+            // Convert to base 10 so value can be incremented properly
             var byteValue = this.convert(this.getData(location));
             var hexValue = (byteValue + 1).toString(16);
             _MemoryManager.insertData(hexValue, location);
