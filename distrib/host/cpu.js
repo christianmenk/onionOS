@@ -123,7 +123,7 @@ var TSOS;
 
         };
 
-        // Loads the constant into the accumulator from memory (converts it too)
+        // Loads the constant into the accumulator(converts it too)
         Cpu.prototype.loadAccConstant = function(){
             this.Acc = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
@@ -142,7 +142,7 @@ var TSOS;
             this.Acc = this.Acc + this.convert(this.getData(this.getMemoryAddress()));
         };
 
-        // Loads the constant into the xreg from memory (converts it too)
+        // Loads the constant into the xreg(converts it too)
         Cpu.prototype.loadXregConstant = function(){
             this.Xreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
@@ -152,7 +152,7 @@ var TSOS;
             this.Xreg = this.getData(this.getMemoryAddress());
         };
 
-        // Loads the constant into the yreg from memory (converts it too)
+        // Loads the constant into the yreg  (converts it too)
         Cpu.prototype.loadYregConstant = function(){
             this.Yreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
         };
@@ -175,8 +175,8 @@ var TSOS;
             var firstLoc = _MemoryManager.memory.storedData[++this.PC];
             var secondLoc = _MemoryManager.memory.storedData[++this.PC];
             // Flip the two inputs to create the memory address
-            var location = (secondLoc + firstLoc);
-            return this.convert(location);
+            var swappedLoc = (secondLoc + firstLoc);
+            return swappedLoc;
         };
 
         // Gets the data from a location in the storedData array
@@ -199,13 +199,12 @@ var TSOS;
             _CurrentProgram.Xreg = this.Xreg;
             _CurrentProgram.Yreg = this.Yreg;
             _CurrentProgram.Zflag = this.Zflag;
-            _CurrentProgram.state = "Terminated";
         };
 
         // Compares a value to the xreg, if true sets the Zflag to 1
         Cpu.prototype.compare = function (){
             var valueFromMem = this.getData(this.getMemoryAddress());
-            if(parseInt(this.Xreg) === parseInt(valueFromMem)){
+            if(this.Xreg === this.convert(valueFromMem)){
                 this.Zflag = 1;
             } else {
                 this.Zflag = 0;
@@ -215,7 +214,10 @@ var TSOS;
         // SUPPOSED TO BRANCH BUT IT WONT
         Cpu.prototype.branch = function (){
             if(this.Zflag === 0){
-                this.PC +=  this.convert(this.getData(++this.PC)) + 1;
+                this.PC += this.convert(this.getData(++this.PC));
+                if(this.PC > 256) {
+                    this.PC = this.PC - 256 + 1;
+                }
             } else {
                 ++this.PC;
             }
@@ -237,6 +239,9 @@ var TSOS;
         Cpu.prototype.terminated = function (){
             this.init();
             _StdOut.putText("Execution complete.");
+            _CurrentProgram.state = "Terminated";
+            _MemoryManager.memory.initMemory();
+            updatePcb();
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
         };

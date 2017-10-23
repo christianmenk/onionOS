@@ -121,12 +121,12 @@ var TSOS;
                         _StdOut.advanceLine();
                     } if (_CPU.Xreg === 2){
 
-                        var position = _CPU.Yreg;
-                        var oldData = _CPU.getData(position);
+                        var offset = _CPU.Yreg;
+                        var oldData = _CPU.getData(offset);
                         var newData = "";
                         while (oldData !== "00"){
                             newData += String.fromCharCode(_CPU.convert(oldData));
-                            oldData = _CPU.getData(++position);
+                            oldData = _CPU.getData(++offset);
                         }
                         _StdOut.putText(newData + "");
                         }
