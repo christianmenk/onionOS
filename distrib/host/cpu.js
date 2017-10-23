@@ -211,7 +211,7 @@ var TSOS;
             }
         };
 
-        // SUPPOSED TO BRANCH BUT IT WONT
+        // Branches this.PC at a specified location in memory
         Cpu.prototype.branch = function (){
             if(this.Zflag === 0){
                 this.PC += this.convert(this.getData(++this.PC));
@@ -227,10 +227,11 @@ var TSOS;
         Cpu.prototype.incrementByte = function (){
             var location = this.getMemoryAddress();
             var byteValue = this.convert(this.getData(location));
-            byteValue++;
-            _MemoryManager.insertData(byteValue.toString(16), location);
+            var hexValue = (byteValue + 1).toString(16);
+            _MemoryManager.insertData(hexValue, location);
         };
 
+        // Sends an interrupt to the KIQ to stop execution
         Cpu.prototype.systemCall = function (){
           _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
         };

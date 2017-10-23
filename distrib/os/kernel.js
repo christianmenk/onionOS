@@ -57,6 +57,11 @@ var TSOS;
             // ... Disable the Interrupts.
             this.krnTrace("Disabling the interrupts.");
             this.krnDisableInterrupts();
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SHUTDOWN));
+            clearInterval(_hardwareClockID);
+            document.getElementById("status").innerText = "[Stopped]";
+            StopTime();
+            _Status = "[Stopped]";
             //
             // Unload the Device Drivers?
             // More?
@@ -131,6 +136,9 @@ var TSOS;
                         _StdOut.putText(newData + "");
                         }
                     break;
+                case SHUTDOWN:
+                    _CPU.isExecuting = false;
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
             }
@@ -195,11 +203,7 @@ var TSOS;
 
             // Shutdown calls
             this.krnShutdown();
-            clearInterval(_hardwareClockID);
-            document.getElementById("status").innerText = "[Stopped]";
-            StopTime();
 
-            _Status = "[Stopped]";
         };
         return Kernel;
     })();
