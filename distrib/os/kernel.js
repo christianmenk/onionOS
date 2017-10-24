@@ -125,12 +125,11 @@ var TSOS;
                         _StdOut.putText(_CPU.Yreg + "");
                         _StdOut.advanceLine();
                     } if (_CPU.Xreg === 2){
-
-                        var offset = _CPU.Yreg;
-                        var oldData = _CPU.getData(offset);
-                        var newData = "";
+                    var offset = _CPU.Yreg;
+                    var oldData = _CPU.getData(offset);
+                    var newData = "";
                         while (oldData !== "00"){
-                            newData += String.fromCharCode(_CPU.convert(oldData));
+                            newData += String.fromCharCode(_CPU.convertToBaseTen(oldData));
                             oldData = _CPU.getData(++offset);
                         }
                         _StdOut.putText(newData + "");
@@ -141,6 +140,7 @@ var TSOS;
                     break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
+                    break;
             }
         };
         Kernel.prototype.krnTimerISR = function () {

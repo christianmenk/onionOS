@@ -47,6 +47,7 @@ var TSOS;
 
         };
 
+        // Inserts data at a given location
         MemoryManager.prototype.insertData = function (data, location){
                 this.memory.storedData[location] = data.toUpperCase();
         };

@@ -116,61 +116,62 @@ var TSOS;
                         this.systemCall();
                         break;
                     default:
-                        //unknown op code
+                        _StdOut.putText("Unknown Op code entered: " + this.getData(this.PC));
+                        _StdOut.advanceLine();
                         break;
                 }
                 this.PC++;
 
         };
 
-        // Loads the constant into the accumulator(converts it too)
+        // Loads the constant into the accumulator(convertToBaseTens it too)
         Cpu.prototype.loadAccConstant = function(){
-            this.Acc = this.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Acc = this.convertToBaseTen(_MemoryManager.memory.storedData[++this.PC]);
         };
         // Loads the constant from memory into the accumulator
         Cpu.prototype.loadAccFromMemory = function(){
-            this.Acc = this.getData(this.getMemoryAddress());
+            this.Acc = this.getData(this.littleEndian());
         };
 
         // Stores acc in memory using the insertData function
         Cpu.prototype.storeAccInMemory = function(){
-            _MemoryManager.insertData(this.Acc.toString(16), this.getMemoryAddress());
+            _MemoryManager.insertData(this.Acc.toString(16), this.littleEndian());
         };
 
         // Adds the acc to a specified constant in memory
         Cpu.prototype.addWithCarry = function(){
-            this.Acc = this.Acc + this.convert(this.getData(this.getMemoryAddress()));
+            this.Acc = this.Acc + this.convertToBaseTen(this.getData(this.littleEndian()));
         };
 
-        // Loads the constant into the xreg(converts it too)
+        // Loads the constant into the xreg(convertToBaseTens it too)
         Cpu.prototype.loadXregConstant = function(){
-            this.Xreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Xreg = this.convertToBaseTen(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         // Loads the constant from memory into the xreg
         Cpu.prototype.loadXregFromMemory = function(){
-            this.Xreg = this.getData(this.getMemoryAddress());
+            this.Xreg = this.getData(this.littleEndian());
         };
 
-        // Loads the constant into the yreg  (converts it too)
+        // Loads the constant into the yreg  (convertToBaseTens it too)
         Cpu.prototype.loadYregConstant = function(){
-            this.Yreg = this.convert(_MemoryManager.memory.storedData[++this.PC]);
+            this.Yreg = this.convertToBaseTen(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         // Loads the constant from memory into the yreg
         Cpu.prototype.loadYregFromMemory = function(){
-            this.Yreg = this.getData(this.getMemoryAddress());
+            this.Yreg = this.getData(this.littleEndian());
         };
 
-        // Converts hex into base 10
-        Cpu.prototype.convert = function (hex){
+        // convertToBaseTens
+        // hex into base 10
+        Cpu.prototype.convertToBaseTen = function (hex){
             return parseInt(hex, 16);
         };
 
-        // getMemoryAddress
-        // Takes the next two instructions and flips them, then converts them to base 10 and returns
-        // When getting the instructions, this.PC increments so they are not referenced on the next cycle
-        Cpu.prototype.getMemoryAddress = function(){
+        // littleEndian
+        // Takes the next two instructions and flips them
+        Cpu.prototype.littleEndian = function(){
             // Get the next two location inputs
             var firstLoc = _MemoryManager.memory.storedData[++this.PC];
             var secondLoc = _MemoryManager.memory.storedData[++this.PC];
@@ -203,8 +204,8 @@ var TSOS;
 
         // Compares a value to the xreg, if true sets the Zflag to 1
         Cpu.prototype.compare = function (){
-            var valueFromMem = this.getData(this.getMemoryAddress());
-            if(this.Xreg === this.convert(valueFromMem)){
+            var valueFromMem = this.convertToBaseTen(this.getData(this.littleEndian()));
+            if(this.convertToBaseTen(this.Xreg) === valueFromMem){
                 this.Zflag = 1;
             } else {
                 this.Zflag = 0;
@@ -214,9 +215,9 @@ var TSOS;
         // Branches this.PC at a specified location in memory
         Cpu.prototype.branch = function (){
             if(this.Zflag === 0){
-                this.PC += this.convert(this.getData(++this.PC));
-                if(this.PC > 256) {
-                    this.PC = this.PC - 256 + 1;
+                this.PC += this.convertToBaseTen(this.getData(++this.PC)) + 1;
+                if(this.PC >= 256) {
+                    this.PC = this.PC - 256;
                 }
             } else {
                 ++this.PC;
@@ -225,9 +226,9 @@ var TSOS;
 
         // Increments byte at a given address by 1
         Cpu.prototype.incrementByte = function (){
-            var location = this.getMemoryAddress();
-            // Convert to base 10 so value can be incremented properly
-            var byteValue = this.convert(this.getData(location));
+            var location = this.littleEndian();
+            // convertToBaseTen to base 10 so value can be incremented properly
+            var byteValue = this.convertToBaseTen(this.getData(location));
             var hexValue = (byteValue + 1).toString(16);
             _MemoryManager.insertData(hexValue, location);
         };
