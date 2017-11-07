@@ -130,7 +130,7 @@ var TSOS;
         };
         // Loads the constant from memory into the accumulator
         Cpu.prototype.loadAccFromMemory = function(){
-            this.Acc = this.getData(this.littleEndian());
+            this.Acc = this.convertToBaseTen(this.getData(this.littleEndian()));
         };
 
         // Stores acc in memory using the insertData function
@@ -143,14 +143,14 @@ var TSOS;
             this.Acc = this.Acc + this.convertToBaseTen(this.getData(this.littleEndian()));
         };
 
-        // Loads the constant into the xreg(convertToBaseTens it too)
+        // Loads the constant into the xreg (convertToBaseTens it too)
         Cpu.prototype.loadXregConstant = function(){
             this.Xreg = this.convertToBaseTen(_MemoryManager.memory.storedData[++this.PC]);
         };
 
         // Loads the constant from memory into the xreg
         Cpu.prototype.loadXregFromMemory = function(){
-            this.Xreg = this.getData(this.littleEndian());
+            this.Xreg = this.convertToBaseTen(this.getData(this.littleEndian()));
         };
 
         // Loads the constant into the yreg  (convertToBaseTens it too)
@@ -160,7 +160,7 @@ var TSOS;
 
         // Loads the constant from memory into the yreg
         Cpu.prototype.loadYregFromMemory = function(){
-            this.Yreg = this.getData(this.littleEndian());
+            this.Yreg = this.convertToBaseTen(this.getData(this.littleEndian()));
         };
 
         // convertToBaseTens
@@ -177,7 +177,7 @@ var TSOS;
             var secondLoc = _MemoryManager.memory.storedData[++this.PC];
             // Flip the two inputs to create the memory address
             var swappedLoc = (secondLoc + firstLoc);
-            return swappedLoc;
+            return this.convertToBaseTen(swappedLoc);
         };
 
         // Gets the data from a location in the storedData array
@@ -228,9 +228,8 @@ var TSOS;
         Cpu.prototype.incrementByte = function (){
             var location = this.littleEndian();
             // convertToBaseTen to base 10 so value can be incremented properly
-            var byteValue = this.convertToBaseTen(this.getData(location));
-            var hexValue = (byteValue + 1).toString(16);
-            _MemoryManager.insertData(hexValue, location);
+            var byteValue = this.convertToBaseTen(this.getData(location)) + 1;
+            _MemoryManager.insertData(byteValue.toString(16), location);
         };
 
         // Sends an interrupt to the KIQ to stop execution
