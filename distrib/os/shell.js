@@ -84,6 +84,10 @@ var TSOS;
             // prompt <string>
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - Runs program with specified PID.");
             this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.shellClear, "clearmem", "Clears all programs in memory.");
+            this.commandList[this.commandList.length] = sc;
+
             // ps  - list the running processes and their IDs
             // kill <id> - kills the specified process id.
             //
@@ -386,6 +390,12 @@ var TSOS;
             else {
                 _StdOut.putText("Please provide a valid PID.");
             }
+        };
+
+        // Clearmem: Clears all current memory
+        Shell.prototype.shellClear= function () {
+            _MemoryManager.memory.initMemory();
+            updateMemory(_MemoryManager.memory);
         };
 
 

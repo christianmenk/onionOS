@@ -3,7 +3,10 @@ var TSOS;
     var Memory = (function () {
         function Memory() {
             this.storedData = [];
-            this.totalMemory = 768;
+            this.segment0 = 0;
+            this.segment1= _ProgramSize;
+            this.segment2 = _ProgramSize * 2;
+            this.totalMemory = _ProgramSize * 3;
             this.initMemory();
         }
 

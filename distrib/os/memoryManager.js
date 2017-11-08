@@ -15,35 +15,55 @@ var TSOS;
             var hexArray = hex.toUpperCase().split(" ");
 
             // Make sure the program can fit into memory
-            if(this.memory.storedData.length < hexArray.length){
+            if(_ProgramSize < hexArray.length){
                 _StdOut.putText("The program is too large to fit into memory.");
             } else {
 
                 // Init can be used to reset memory for new functions being entered
-                this.memory.initMemory();
+
+                if(this.memory.storedData[this.memory.segment0] === "00"){
+                    for (var i = 0; i < hexArray.length; i++) {
+                        this.memory.storedData[i] = hexArray[i];
+                        this.createPCB(this.memory.segment0);
+                    }
+                } else if(this.memory.storedData[this.memory.segment1] === "00"){
+                    for (var i = 0; i < hexArray.length; i++) {
+                        this.memory.storedData[i + this.memory.segment1] = hexArray[i];
+                        this.createPCB(this.memory.segment1);
+                    }
+                }  else if(this.memory.storedData[this.memory.segment2] === "00"){
+                    for (var i = 0; i < hexArray.length; i++) {
+                        this.memory.storedData[i + this.memory.segment2] = hexArray[i];
+                        this.createPCB(this.memory.segment2);
+                    }
+                } else {
+                    _StdOut.putText("There is no available memory.");
+                }
 
                 _ProgramLength = hexArray.length;
                 // Add new hex array to memory
-                for (var i = 0; i < hexArray.length; i++) {
-                    this.memory.storedData[i] = hexArray[i];
-                }
+
 
                 // Update the memory table
                 updateMemory(this.memory);
-
-                // Increment PID for next program loaded
-                _PID++;
-
-                this.pcb = new TSOS.Pcb(_PID);
-                this.pcb.state = "Ready";
-                _CurrentProgram = this.pcb;
-
-
-                // Update pcb display
-                updatePcb();
-
-                _StdOut.putText("Program loaded: PID " + this.pcb.PID);
             }
+
+        };
+
+        MemoryManager.prototype.createPCB = function (base){
+            // Increment PID for next program loaded
+            _PID++;
+
+            this.pcb = new TSOS.Pcb(_PID);
+            this.pcb.base = base;
+            this.pcb.state = "Ready";
+            _CurrentProgram = this.pcb;
+
+
+            // Update pcb display
+            updatePcb();
+
+            _StdOut.putText("Program loaded: PID " + this.pcb.PID);
 
         };
 

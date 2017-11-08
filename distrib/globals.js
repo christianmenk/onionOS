@@ -46,6 +46,7 @@ var _OsShell;
 
 // Memory
 var _MemoryManager;
+var _ProgramSize = 256;
 
 
 // Processes
