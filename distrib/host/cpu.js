@@ -47,11 +47,11 @@ var TSOS;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
-            this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
+            this.executeProgram(_MemoryManager.memory.storedData[_CurrentProgram.base]);
 
             updateCpu();
-            updatePcb();
             this.updatePcbVals();
+            updateCurrentPcb(_CurrentProgram);
             updateMemory(_MemoryManager.memory);
     };
 
@@ -61,6 +61,7 @@ var TSOS;
         // When complete, sets execution state to false to stop the cpu execution.
         Cpu.prototype.executeProgram = function (hex){
 
+            _StdOut.putText(_CurrentProgram.base);
                 switch(hex) {
                     case "A9":
                         // load acc with constant
@@ -189,7 +190,7 @@ var TSOS;
         Cpu.prototype.break = function (){
             this.updatePcbVals();
             updateCpu();
-            updatePcb();
+            updateCurrentPcb(_CurrentProgram);
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
 
@@ -243,7 +244,7 @@ var TSOS;
             _StdOut.putText("Execution complete.");
             _CurrentProgram.state = "Terminated";
             _MemoryManager.memory.initMemory();
-            updatePcb();
+            updateCurrentPcb(_CurrentProgram);
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
         };

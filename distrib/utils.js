@@ -87,7 +87,7 @@ function updateCpu(){
 }
 
 // Function for updating PCB DOM element
-function updatePcb(){
+function updateCurrentPcb(){
     $('#pcbPID').html(_CurrentProgram.PID);
     $('#pcbState').html(_CurrentProgram.state);
     $('#pcbPC').html(_CurrentProgram.PC);
@@ -132,4 +132,23 @@ function updateMemory(memory){
 
     // This will replace the entire body each time updateMemory is called
     table.find('tbody').replaceWith(html);
+}
+
+function clearPcbTable(){
+    $('#pcbTable').find('tbody').replaceWith('<tbody>');
+}
+
+function createPcbRow(pcb) {
+    pcbTable = $('#pcbTable');
+    var newRow = '<tr id="' + pcb.PID + '">' +
+    '<td >' + pcb.PID + '</td>' +
+    '<td >' + pcb.state + '</td>' +
+    '<td >' + pcb.PC + '</td>' +
+    '<td >' + pcb.Acc + '</td>' +
+    '<td >' + pcb.Xreg + '</td>' +
+    '<td >' + pcb.Yreg + '</td>' +
+    '<td >' + pcb.Zflag + '</td>' +
+    '<td >' + pcb.base + '</td>' +
+    '<td >' + pcb.limit + '</td>'
+    pcbTable.find('tbody').append(newRow);
 }

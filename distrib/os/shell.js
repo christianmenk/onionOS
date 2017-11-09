@@ -382,13 +382,16 @@ var TSOS;
         // This command checks to see if the input is = the current PID, and changes the state of the CPU to executing
         // This triggers the kernel to start a CPU cycle and run the loaded program from memory
         Shell.prototype.shellRun = function (args) {
-            if (args[0] == _PID) {
-                _StdOut.putText("Executing program with PID: " + _PID );
-                _CurrentProgram.state = "Running";
-               _CPU.isExecuting = true;
-            }
-            else {
-                _StdOut.putText("Please provide a valid PID.");
+            for(var i = 0; i < _ResidentList.length; i++){
+                _StdOut.putText(_ResidentList[i].PID + " ");
+                 if(_ResidentList[i].PID == args[0]){
+                    _StdOut.putText("Executing program with PID: " + args[0] );
+                    _CurrentProgram = _ResidentList[i];
+                    _StdOut.putText(_CurrentProgram.base + "");
+                    _CPU.isExecuting = true;
+                } else if(i === _ResidentList.length) {
+                    _StdOut.putText("Please provide a valid PID.");
+                }
             }
         };
 
@@ -396,6 +399,7 @@ var TSOS;
         Shell.prototype.shellClear= function () {
             _MemoryManager.memory.initMemory();
             updateMemory(_MemoryManager.memory);
+            clearPcbTable();
         };
 
 

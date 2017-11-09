@@ -8,6 +8,7 @@ var TSOS;
 
         MemoryManager.prototype.init = function(){
             updateMemory(this.memory);
+            _ReadyQueue = new TSOS.Queue;
         };
 
         MemoryManager.prototype.load = function (hex){
@@ -24,18 +25,18 @@ var TSOS;
                 if(this.memory.storedData[this.memory.segment0] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i] = hexArray[i];
-                        this.createPCB(this.memory.segment0);
                     }
+                    this.createPCB(this.memory.segment0, "Ready");
                 } else if(this.memory.storedData[this.memory.segment1] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment1] = hexArray[i];
-                        this.createPCB(this.memory.segment1);
                     }
+                    this.createPCB(this.memory.segment1, "Waiting");
                 }  else if(this.memory.storedData[this.memory.segment2] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment2] = hexArray[i];
-                        this.createPCB(this.memory.segment2);
                     }
+                    this.createPCB(this.memory.segment2, "Waiting");
                 } else {
                     _StdOut.putText("There is no available memory.");
                 }
@@ -50,18 +51,17 @@ var TSOS;
 
         };
 
-        MemoryManager.prototype.createPCB = function (base){
+        MemoryManager.prototype.createPCB = function (base, state){
             // Increment PID for next program loaded
             _PID++;
 
             this.pcb = new TSOS.Pcb(_PID);
             this.pcb.base = base;
-            this.pcb.state = "Ready";
-            _CurrentProgram = this.pcb;
-
-
+            this.pcb.state = state;
+            _ResidentList.push(this.pcb);
+            createPcbRow(this.pcb);
             // Update pcb display
-            updatePcb();
+
 
             _StdOut.putText("Program loaded: PID " + this.pcb.PID);
 
