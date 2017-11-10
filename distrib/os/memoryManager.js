@@ -45,6 +45,7 @@ var TSOS;
                 // Add new hex array to memory
 
 
+
                 // Update the memory table
                 updateMemory(this.memory);
             }
@@ -58,6 +59,7 @@ var TSOS;
             this.pcb = new TSOS.Pcb(_PID);
             this.pcb.base = base;
             this.pcb.state = state;
+            this.pcb.limit = base += _ProgramSize;
             _ResidentList.push(this.pcb);
             createPcbRow(this.pcb);
             // Update pcb display

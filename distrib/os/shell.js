@@ -383,12 +383,10 @@ var TSOS;
         // This triggers the kernel to start a CPU cycle and run the loaded program from memory
         Shell.prototype.shellRun = function (args) {
             for(var i = 0; i < _ResidentList.length; i++){
-                _StdOut.putText(_ResidentList[i].PID + " ");
                  if(_ResidentList[i].PID == args[0]){
+                     _ReadyQueue.enqueue(_ResidentList[i]);
                     _StdOut.putText("Executing program with PID: " + args[0] );
-                    _CurrentProgram = _ResidentList[i];
-                    _StdOut.putText(_CurrentProgram.base + "");
-                    _CPU.isExecuting = true;
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXECUTE_PROGRAM));
                 } else if(i === _ResidentList.length) {
                     _StdOut.putText("Please provide a valid PID.");
                 }

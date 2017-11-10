@@ -138,6 +138,9 @@ var TSOS;
                 case SHUTDOWN:
                     _CPU.isExecuting = false;
                     break;
+                case EXECUTE_PROGRAM:
+                    _CpuScheduler.begin();
+                    break;
                 default:
                     this.krnTrapError("Invalid Interrupt Request. irq=" + irq + " params=[" + params + "]");
                     break;

@@ -29,14 +29,30 @@ var TSOS;
             this.Yreg = Yreg;
             this.Zflag = Zflag;
             this.isExecuting = isExecuting;
+            this.currentPcb = null;
         }
-        Cpu.prototype.init = function () {
-            this.PC = 0;
-            this.Acc = 0;
-            this.Xreg = 0;
-            this.Yreg = 0;
-            this.Zflag = 0;
-            this.isExecuting = false;
+        Cpu.prototype.init = function (pcb, executing) {
+            if(pcb) {
+                this.PC = pcb.PC + pcb.base;
+                this.Acc = pcb.Acc;
+                this.Xreg = pcb.Xreg;
+                this.Yreg = pcb.Yreg;
+                this.Zflag = pcb.Zflag;
+                this.currentPcb = pcb;
+            } else {
+                this.PC = 0;
+                this.Acc = 0;
+                this.Xreg = 0;
+                this.Yreg = 0;
+                this.Zflag = 0;
+                this.currentPcb = null;
+            }
+
+            if(executing){
+                this.isExecuting = true;
+            } else {
+                this.isExecuting = false;
+            }
 
             updateCpu();
         };
@@ -47,13 +63,17 @@ var TSOS;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
-            this.executeProgram(_MemoryManager.memory.storedData[_CurrentProgram.base]);
+
+
+            this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
 
             updateCpu();
-            this.updatePcbVals();
-            updateCurrentPcb(_CurrentProgram);
+            // this.updatePcbVals();
+            // updateCurrentPcb(this.currentPcb);
             updateMemory(_MemoryManager.memory);
     };
+
+
 
         // Execute program function
         // Gets called on every CPU cycle with the hex code to be translated by the OP codes and printed
@@ -61,7 +81,6 @@ var TSOS;
         // When complete, sets execution state to false to stop the cpu execution.
         Cpu.prototype.executeProgram = function (hex){
 
-            _StdOut.putText(_CurrentProgram.base);
                 switch(hex) {
                     case "A9":
                         // load acc with constant
@@ -190,17 +209,17 @@ var TSOS;
         Cpu.prototype.break = function (){
             this.updatePcbVals();
             updateCpu();
-            updateCurrentPcb(_CurrentProgram);
+            // updateCurrentPcb(_CurrentProgram);
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
 
         // Updates the Pcb values with the CPU values
         Cpu.prototype.updatePcbVals = function (){
-            _CurrentProgram.PC = this.PC;
-            _CurrentProgram.Acc = this.Acc;
-            _CurrentProgram.Xreg = this.Xreg;
-            _CurrentProgram.Yreg = this.Yreg;
-            _CurrentProgram.Zflag = this.Zflag;
+            this.currentPcb.PC = this.PC;
+            this.currentPcb.Acc = this.Acc;
+            this.currentPcb.Xreg = this.Xreg;
+            this.currentPcb.Yreg = this.Yreg;
+            this.currentPcb.Zflag = this.Zflag;
         };
 
         // Compares a value to the xreg, if true sets the Zflag to 1
@@ -240,13 +259,13 @@ var TSOS;
 
         // Completed process ending function calls etc
         Cpu.prototype.terminated = function (){
-            this.init();
+
             _StdOut.putText("Execution complete.");
-            _CurrentProgram.state = "Terminated";
-            _MemoryManager.memory.initMemory();
-            updateCurrentPcb(_CurrentProgram);
+            this.currentPcb.state = "Terminated";
+            // updateCurrentPcb(_CurrentProgram);
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
+            this.init();
         };
 
         return Cpu;

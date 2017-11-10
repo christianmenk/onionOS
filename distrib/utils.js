@@ -87,17 +87,17 @@ function updateCpu(){
 }
 
 // Function for updating PCB DOM element
-function updateCurrentPcb(){
-    $('#pcbPID').html(_CurrentProgram.PID);
-    $('#pcbState').html(_CurrentProgram.state);
-    $('#pcbPC').html(_CurrentProgram.PC);
-    $('#pcbAcc').html(_CurrentProgram.Acc);
-    $('#pcbX').html(_CurrentProgram.Xreg);
-    $('#pcbY').html(_CurrentProgram.Yreg);
-    $('#pcbZ').html(_CurrentProgram.Zflag);
-    $('#pcbBase').html(_CurrentProgram.base);
-    $('#pcbLimit').html(_CurrentProgram.limit);
-}
+// function updateCurrentPcb(){
+//     $('#pcbPID').html(_CurrentProgram.PID);
+//     $('#pcbState').html(_CurrentProgram.state);
+//     $('#pcbPC').html(_CurrentProgram.PC);
+//     $('#pcbAcc').html(_CurrentProgram.Acc);
+//     $('#pcbX').html(_CurrentProgram.Xreg);
+//     $('#pcbY').html(_CurrentProgram.Yreg);
+//     $('#pcbZ').html(_CurrentProgram.Zflag);
+//     $('#pcbBase').html(_CurrentProgram.base);
+//     $('#pcbLimit').html(_CurrentProgram.limit);
+// }
 
 // Function used for updating memory table
 // The memory object is passed as a parameter to reference the array lengths for html generation purposes
@@ -152,3 +152,4 @@ function createPcbRow(pcb) {
     '<td >' + pcb.limit + '</td>'
     pcbTable.find('tbody').append(newRow);
 }
+

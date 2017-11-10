@@ -19,6 +19,7 @@ var KEYBOARD_IRQ = 1;
 var CPU_BREAK = 2;
 var SYS_CALL = 3;
 var SHUTDOWN = 4;
+var EXECUTE_PROGRAM = 5;
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -49,6 +50,9 @@ var _MemoryManager;
 var _ProgramSize = 256;
 var _ResidentList = [];
 var _ReadyQueue;
+
+// Scheduling
+var _CpuScheduler;
 
 
 // Processes
