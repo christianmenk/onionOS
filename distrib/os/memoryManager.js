@@ -39,6 +39,8 @@ var TSOS;
                     this.createPCB(this.memory.segment2, "Ready");
                 } else {
                     _StdOut.putText("There is no available memory.");
+                    _StdOut.advanceLine();
+                    _StdOut.putText("You can use clearmem to clear all current programs in memory.");
                 }
 
                 _ProgramLength = hexArray.length;

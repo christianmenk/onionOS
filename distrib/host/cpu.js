@@ -39,6 +39,7 @@ var TSOS;
                 this.Yreg = pcb.Yreg;
                 this.Zflag = pcb.Zflag;
                 this.currentPcb = pcb;
+                updateCpu(this.currentPcb.base);
             } else {
                 this.PC = 0;
                 this.Acc = 0;
@@ -46,6 +47,7 @@ var TSOS;
                 this.Yreg = 0;
                 this.Zflag = 0;
                 this.currentPcb = null;
+                updateCpu(0);
             }
 
             if(executing){
@@ -54,7 +56,7 @@ var TSOS;
                 this.isExecuting = false;
             }
 
-            updateCpu(0);
+
         };
 
         // Cycle function
@@ -63,13 +65,15 @@ var TSOS;
         Cpu.prototype.cycle = function () {
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
-
+            _CycleCount++;
 
             this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
             updateCpu(this.currentPcb.base);
             updateMemory(_MemoryManager.memory);
             this.updatePcbVals();
             updateCurrentPcb(this.currentPcb);
+
+            _CpuScheduler.checkSwitch(this.currentPcb);
     };
 
 
@@ -211,7 +215,9 @@ var TSOS;
             this.updatePcbVals();
             updateCpu(this.currentPcb.base);
             // updateCurrentPcb(_CurrentProgram);
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
+            this.currentPcb.state = "Terminated";
+            if(_ReadyQueue.isEmpty())
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
 
         // Updates the Pcb values with the CPU values
@@ -222,6 +228,7 @@ var TSOS;
             this.currentPcb.Yreg = this.Yreg;
             this.currentPcb.Zflag = this.Zflag;
         };
+
 
         // Compares a value to the xreg, if true sets the Zflag to 1
         Cpu.prototype.compare = function (){
@@ -255,17 +262,20 @@ var TSOS;
 
         // Sends an interrupt to the KIQ to stop execution
         Cpu.prototype.systemCall = function (){
-          _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
+            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
         };
 
         // Completed process ending function calls etc
         Cpu.prototype.terminated = function (){
             _StdOut.putText("Execution complete.");
-            this.currentPcb.state = "Terminated";
+            for(var i = 0; i < _ResidentList.length; i++){
+                if(this.currentPcb.PID === _ResidentList[i].PID){
+                    _ResidentList.splice(i, 1);
+                }
+            }
              updateCurrentPcb(this.currentPcb);
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
-            this.init();
         };
 
         return Cpu;

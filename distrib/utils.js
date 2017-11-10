@@ -79,7 +79,7 @@ function StopTime(){
 
 // Function for updating CPU DOM element
 function updateCpu(base){
-    $('#cpuPC').html(_CPU.PC - base);
+    $('#cpuPC').html(_CPU.PC);
     $('#cpuAcc').html(_CPU.Acc);
     $('#cpuX').html(_CPU.Xreg);
     $('#cpuY').html(_CPU.Yreg);
@@ -94,7 +94,7 @@ function updateCurrentPcb(pcb){
             row.replaceWith('<tr id="' + "pid_" + pcb.PID + '">' +
                 '<td class="PID">' + pcb.PID + '</td>' +
                 '<td class="state">' + pcb.state + '</td>' +
-                '<td class="PC">' + (pcb.PC - pcb.base) + '</td>' +
+                '<td class="PC">' + (pcb.PC) + '</td>' +
                 '<td class="Acc">' + pcb.Acc + '</td>' +
                 '<td class="Xreg">' + pcb.Xreg + '</td>' +
                 '<td class="Yreg">' + pcb.Yreg + '</td>' +

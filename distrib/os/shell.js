@@ -81,10 +81,19 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Loads user input into memory.");
             this.commandList[this.commandList.length] = sc;
 
-            // prompt <string>
+            // run <pid>, used to run a program with given pid
             sc = new TSOS.ShellCommand(this.shellRun, "run", "<PID> - Runs program with specified PID.");
             this.commandList[this.commandList.length] = sc;
 
+            // runall, used to start the cpu scheduling process for all programs in mem
+            sc = new TSOS.ShellCommand(this.shellRunAll, "runall", "Runs all programs in memory with given quantum.");
+            this.commandList[this.commandList.length] = sc;
+
+            // quantum, sets the round robin quantum
+            sc = new TSOS.ShellCommand(this.shellQuantum, "quantum", "<integer> - Sets the round robin quantum.");
+            this.commandList[this.commandList.length] = sc;
+
+            //clearmem, clears all programs in memory and in the resident list
             sc = new TSOS.ShellCommand(this.shellClear, "clearmem", "Clears all programs in memory.");
             this.commandList[this.commandList.length] = sc;
 
@@ -390,6 +399,27 @@ var TSOS;
                 } else if(i === _ResidentList.length) {
                     _StdOut.putText("Please provide a valid PID.");
                 }
+            }
+        };
+
+        Shell.prototype.shellRunAll= function () {
+            if(_ResidentList.length !== 0) {
+                for(var i = 0; i < _ResidentList.length; i++){
+                    _ReadyQueue.enqueue(_ResidentList[i]);
+                }
+                _StdOut.putText("Executing " + _ReadyQueue.getSize() + " program(s) from memory...")
+                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(RUN_ALL_PROG));
+            } else {
+                _StdOut.putText("There are no programs to run!");
+            }
+        };
+
+        Shell.prototype.shellQuantum = function (args) {
+            if(args.length > 0) {
+                _Quantum = args[0];
+                _StdOut.putText("The quantum is now set to " + _Quantum + ".")
+            } else {
+                _StdOut.putText("Please provide a valid number.");
             }
         };
 

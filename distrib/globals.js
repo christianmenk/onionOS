@@ -20,6 +20,7 @@ var CPU_BREAK = 2;
 var SYS_CALL = 3;
 var SHUTDOWN = 4;
 var EXECUTE_PROGRAM = 5;
+var RUN_ALL_PROG = 6;
 //
 // Global Variables
 // TODO: Make a global object and use that instead of the "_" naming convention in the global namespace.
@@ -49,10 +50,12 @@ var _OsShell;
 var _MemoryManager;
 var _ProgramSize = 256;
 var _ResidentList = [];
-var _ReadyQueue;
+var _ReadyQueue = [];
 
 // Scheduling
 var _CpuScheduler;
+var _Quantum = 6;
+var _CycleCount = 0;
 
 
 // Processes
