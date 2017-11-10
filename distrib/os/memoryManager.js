@@ -31,12 +31,12 @@ var TSOS;
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment1] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment1, "Waiting");
+                    this.createPCB(this.memory.segment1, "Ready");
                 }  else if(this.memory.storedData[this.memory.segment2] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment2] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment2, "Waiting");
+                    this.createPCB(this.memory.segment2, "Ready");
                 } else {
                     _StdOut.putText("There is no available memory.");
                 }

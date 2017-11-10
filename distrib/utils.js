@@ -87,17 +87,24 @@ function updateCpu(){
 }
 
 // Function for updating PCB DOM element
-// function updateCurrentPcb(){
-//     $('#pcbPID').html(_CurrentProgram.PID);
-//     $('#pcbState').html(_CurrentProgram.state);
-//     $('#pcbPC').html(_CurrentProgram.PC);
-//     $('#pcbAcc').html(_CurrentProgram.Acc);
-//     $('#pcbX').html(_CurrentProgram.Xreg);
-//     $('#pcbY').html(_CurrentProgram.Yreg);
-//     $('#pcbZ').html(_CurrentProgram.Zflag);
-//     $('#pcbBase').html(_CurrentProgram.base);
-//     $('#pcbLimit').html(_CurrentProgram.limit);
-// }
+function updateCurrentPcb(pcb){
+    for(var i = 0; i < _ResidentList.length; i++){
+        if(pcb.PID === _ResidentList[i].PID){
+            var row = $('#' + "pid_" + i);
+            row.replaceWith('<tr id="' + "pid_" + pcb.PID + '">' +
+                '<td class="PID">' + pcb.PID + '</td>' +
+                '<td class="state">' + pcb.state + '</td>' +
+                '<td class="PC">' + (pcb.PC - pcb.base) + '</td>' +
+                '<td class="Acc">' + pcb.Acc + '</td>' +
+                '<td class="Xreg">' + pcb.Xreg + '</td>' +
+                '<td class="Yreg">' + pcb.Yreg + '</td>' +
+                '<td class="Zflag">' + pcb.Zflag + '</td>' +
+                '<td class="base">' + pcb.base + '</td>' +
+                '<td class="limit">' + pcb.limit + '</td>');
+        }
+    }
+
+}
 
 // Function used for updating memory table
 // The memory object is passed as a parameter to reference the array lengths for html generation purposes
@@ -140,16 +147,16 @@ function clearPcbTable(){
 
 function createPcbRow(pcb) {
     pcbTable = $('#pcbTable');
-    var newRow = '<tr id="' + pcb.PID + '">' +
-    '<td >' + pcb.PID + '</td>' +
-    '<td >' + pcb.state + '</td>' +
-    '<td >' + pcb.PC + '</td>' +
-    '<td >' + pcb.Acc + '</td>' +
-    '<td >' + pcb.Xreg + '</td>' +
-    '<td >' + pcb.Yreg + '</td>' +
-    '<td >' + pcb.Zflag + '</td>' +
-    '<td >' + pcb.base + '</td>' +
-    '<td >' + pcb.limit + '</td>'
+    var newRow = '<tr id="' + "pid_" + pcb.PID + '">' +
+    '<td class="PID">' + pcb.PID + '</td>' +
+    '<td class="state">' + pcb.state + '</td>' +
+    '<td class="PC">' + pcb.PC + '</td>' +
+    '<td class="Acc">' + pcb.Acc + '</td>' +
+    '<td class="Xreg">' + pcb.Xreg + '</td>' +
+    '<td class="Yreg">' + pcb.Yreg + '</td>' +
+    '<td class="Zflag">' + pcb.Zflag + '</td>' +
+    '<td class="base">' + pcb.base + '</td>' +
+    '<td class="limit">' + pcb.limit + '</td>';
     pcbTable.find('tbody').append(newRow);
 }
 

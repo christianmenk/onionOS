@@ -6,6 +6,7 @@ var TSOS;
 
         CpuScheduler.prototype.begin = function() {
             var program = _ReadyQueue.dequeue();
+            program.state = "Running";
             _CPU.init(program, true);
         };
 

@@ -68,9 +68,8 @@ var TSOS;
             this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
 
             updateCpu();
-            // this.updatePcbVals();
-            // updateCurrentPcb(this.currentPcb);
             updateMemory(_MemoryManager.memory);
+            updateCurrentPcb(this.currentPcb);
     };
 
 
@@ -259,10 +258,9 @@ var TSOS;
 
         // Completed process ending function calls etc
         Cpu.prototype.terminated = function (){
-
             _StdOut.putText("Execution complete.");
             this.currentPcb.state = "Terminated";
-            // updateCurrentPcb(_CurrentProgram);
+             updateCurrentPcb(this.currentPcb);
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
             this.init();
