@@ -78,8 +78,8 @@ function StopTime(){
 }
 
 // Function for updating CPU DOM element
-function updateCpu(){
-    $('#cpuPC').html(_CPU.PC);
+function updateCpu(base){
+    $('#cpuPC').html(_CPU.PC - base);
     $('#cpuAcc').html(_CPU.Acc);
     $('#cpuX').html(_CPU.Xreg);
     $('#cpuY').html(_CPU.Yreg);

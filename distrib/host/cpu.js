@@ -54,7 +54,7 @@ var TSOS;
                 this.isExecuting = false;
             }
 
-            updateCpu();
+            updateCpu(0);
         };
 
         // Cycle function
@@ -66,11 +66,13 @@ var TSOS;
 
 
             this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
-
-            updateCpu();
+            updateCpu(this.currentPcb.base);
             updateMemory(_MemoryManager.memory);
+            this.updatePcbVals();
             updateCurrentPcb(this.currentPcb);
     };
+
+
 
 
 
@@ -207,7 +209,7 @@ var TSOS;
         // Break function sends interrupt and updates everything before terminated the process
         Cpu.prototype.break = function (){
             this.updatePcbVals();
-            updateCpu();
+            updateCpu(this.currentPcb.base);
             // updateCurrentPcb(_CurrentProgram);
             _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
