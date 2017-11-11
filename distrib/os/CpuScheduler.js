@@ -16,7 +16,7 @@ var TSOS;
                 if(currentProgram.state === "Ready"){
                     _CPU.init(currentProgram, true);
                     currentProgram.state = "Running";
-                } else if(currentProgram.state === "Waiting") {
+                } else if(currentProgram.state === "Waiting" || currentProgram.state === "Running") {
                     this.contextSwitch(currentProgram);
                     currentProgram.state = "Running";
                 }
@@ -37,10 +37,15 @@ var TSOS;
             if(_CycleCount === _Quantum || runningProgram.state === "Terminated"){
                 _CycleCount = 0;
                 if(runningProgram.state !== "Terminated"){
-                    runningProgram.state = "Waiting";
+                    if(_ReadyQueue.isEmpty()){
+                        runningProgram.state = "Running"
+                    } else {
+                        runningProgram.state = "Waiting";
+                    }
                     updateCurrentPcb(runningProgram);
                     _ReadyQueue.enqueue(runningProgram);
                 } else if(_ReadyQueue.isEmpty() && runningProgram.state === "Terminated"){
+                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
                     _Scheduling = false;
                 }
                 this.runAll();

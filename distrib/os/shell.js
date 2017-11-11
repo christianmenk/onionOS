@@ -98,7 +98,12 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             // ps  - list the running processes and their IDs
+            sc = new TSOS.ShellCommand(this.shellPs, "ps", "Displays all running programs.");
+            this.commandList[this.commandList.length] = sc;
+
             // kill <id> - kills the specified process id.
+            sc = new TSOS.ShellCommand(this.shellKill, "kill", "<PID> Kills a specified running program.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -395,6 +400,7 @@ var TSOS;
                  if(_ResidentList[i].PID == args[0]){
                      _ReadyQueue.enqueue(_ResidentList[i]);
                     _StdOut.putText("Executing program with PID: " + args[0] );
+                    _Scheduling = true;
                     _KernelInterruptQueue.enqueue(new TSOS.Interrupt(EXECUTE_PROGRAM));
                 } else if(i === _ResidentList.length) {
                     _StdOut.putText("Please provide a valid PID.");
@@ -429,6 +435,39 @@ var TSOS;
             _MemoryManager.memory.initMemory();
             updateMemory(_MemoryManager.memory);
             clearPcbTable();
+            _ResidentList = [];
+            while(!_ReadyQueue.isEmpty()){
+                _ReadyQueue.dequeue();
+            }
+        };
+
+        Shell.prototype.shellPs = function () {
+            if(_CPU.isExecuting === true) {
+                _StdOut.putText("Running Programs:");
+                for (var i = 0; i < _ResidentList.length; i++) {
+                    if (_ResidentList[i].state === "Running" || _ResidentList[i].state === "Waiting") {
+                        _StdOut.advanceLine();
+                        _StdOut.putText("PID: " + _ResidentList[i].PID);
+                    }
+                }
+            } else {
+                _StdOut.putText("There are no programs running.");
+            }
+        };
+
+        Shell.prototype.shellKill = function (args) {
+            if(_Scheduling) {
+                for (var i = 0; i < _ResidentList.length; i++) {
+                    if (_ResidentList[i].PID == args[0]) {
+                        _CPU.currentPcb.state = "Terminated";
+                        _ResidentList.splice(i, 1);
+                    } else if (i === _ResidentList.length) {
+                        _StdOut.putText("Please enter a valid PID.");
+                    }
+                }
+            } else {
+                _StdOut.putText("There are no running processes!")
+            }
         };
 
 
