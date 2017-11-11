@@ -15,10 +15,11 @@ var TSOS;
                 var currentProgram = _ReadyQueue.dequeue();
                 if(currentProgram.state === "Ready"){
                     _CPU.init(currentProgram, true);
-                } else {
+                    currentProgram.state = "Running";
+                } else if(currentProgram.state === "Waiting") {
                     this.contextSwitch(currentProgram);
+                    currentProgram.state = "Running";
                 }
-                currentProgram.state = "Running";
             }
 
         };
@@ -29,19 +30,28 @@ var TSOS;
             _CPU.Xreg = runningProgram.Xreg;
             _CPU.Yreg = runningProgram.Yreg;
             _CPU.Zflag = runningProgram.Zflag;
+            _CPU.currentPcb = runningProgram;
         };
 
         CpuScheduler.prototype.checkSwitch = function (runningProgram){
-            if(_CycleCount === _Quantum){
+            if(_CycleCount === _Quantum || runningProgram.state === "Terminated"){
                 _CycleCount = 0;
-                if(runningProgram.state !== "Terminated") {
+                if(runningProgram.state !== "Terminated"){
                     runningProgram.state = "Waiting";
                     updateCurrentPcb(runningProgram);
                     _ReadyQueue.enqueue(runningProgram);
-                    this.runAll();
+                } else if(_ReadyQueue.isEmpty() && runningProgram.state === "Terminated"){
+                    _Scheduling = false;
                 }
+                this.runAll();
             }
 
+
+
+        };
+
+        CpuScheduler.prototype.complete = function (runningProgram){
+            _CPU.isExecuting = false;
         };
 
 

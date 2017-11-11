@@ -50,12 +50,13 @@ var _OsShell;
 var _MemoryManager;
 var _ProgramSize = 256;
 var _ResidentList = [];
-var _ReadyQueue = [];
+var _ReadyQueue;
 
 // Scheduling
 var _CpuScheduler;
 var _Quantum = 6;
 var _CycleCount = 0;
+var _Scheduling = false;
 
 
 // Processes

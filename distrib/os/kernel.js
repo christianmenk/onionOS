@@ -126,11 +126,11 @@ var TSOS;
                         _StdOut.advanceLine();
                     } if (_CPU.Xreg === 2){
                     var offset = _CPU.Yreg;
-                    var oldData = _CPU.getData(offset);
+                    var oldData = _CPU.getData(offset + _CPU.currentPcb.base);
                     var newData = "";
                         while (oldData !== "00"){
                             newData += String.fromCharCode(_CPU.convertToBaseTen(oldData));
-                            oldData = _CPU.getData(++offset);
+                            oldData = _CPU.getData(++offset + _CPU.currentPcb.base);
                         }
                         _StdOut.putText(newData + "");
                         }

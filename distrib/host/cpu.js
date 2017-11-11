@@ -66,7 +66,7 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             _CycleCount++;
-
+            console.log(this.PC);
             this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
             updateCpu(this.currentPcb.base);
             updateMemory(_MemoryManager.memory);
@@ -201,7 +201,11 @@ var TSOS;
             var firstLoc = _MemoryManager.memory.storedData[++this.PC];
             var secondLoc = _MemoryManager.memory.storedData[++this.PC];
             // Flip the two inputs to create the memory address
-            var swappedLoc = (secondLoc + firstLoc);
+            var swappedLoc;
+            if(this.currentPcb.base > 0)
+                swappedLoc = (secondLoc + firstLoc) + this.currentPcb.base;
+            else
+                swappedLoc = (secondLoc + firstLoc);
             return this.convertToBaseTen(swappedLoc);
         };
 
@@ -214,10 +218,9 @@ var TSOS;
         Cpu.prototype.break = function (){
             this.updatePcbVals();
             updateCpu(this.currentPcb.base);
-            // updateCurrentPcb(_CurrentProgram);
             this.currentPcb.state = "Terminated";
-            if(_ReadyQueue.isEmpty())
-                _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
+            if(_ReadyQueue.isEmpty() && !_Scheduling)
+              _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
         };
 
         // Updates the Pcb values with the CPU values
@@ -228,7 +231,6 @@ var TSOS;
             this.currentPcb.Yreg = this.Yreg;
             this.currentPcb.Zflag = this.Zflag;
         };
-
 
         // Compares a value to the xreg, if true sets the Zflag to 1
         Cpu.prototype.compare = function (){
@@ -244,7 +246,7 @@ var TSOS;
         Cpu.prototype.branch = function (){
             if(this.Zflag === 0){
                 this.PC += this.convertToBaseTen(this.getData(++this.PC)) + 1;
-                if(this.PC >= 256) {
+                if(this.PC >= this.currentPcb.limit) {
                     this.PC = this.PC - 256;
                 }
             } else {
@@ -262,7 +264,7 @@ var TSOS;
 
         // Sends an interrupt to the KIQ to stop execution
         Cpu.prototype.systemCall = function (){
-            _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
+          _KernelInterruptQueue.enqueue(new TSOS.Interrupt(SYS_CALL));
         };
 
         // Completed process ending function calls etc
@@ -276,6 +278,7 @@ var TSOS;
              updateCurrentPcb(this.currentPcb);
             _StdOut.advanceLine();
             _StdOut.putText(_OsShell.promptStr);
+            this.init();
         };
 
         return Cpu;

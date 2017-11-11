@@ -408,6 +408,7 @@ var TSOS;
                     _ReadyQueue.enqueue(_ResidentList[i]);
                 }
                 _StdOut.putText("Executing " + _ReadyQueue.getSize() + " program(s) from memory...")
+                _Scheduling = true;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(RUN_ALL_PROG));
             } else {
                 _StdOut.putText("There are no programs to run!");
