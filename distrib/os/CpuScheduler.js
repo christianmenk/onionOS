@@ -2,6 +2,7 @@ var TSOS;
 (function (TSOS) {
     var CpuScheduler = (function () {
         function CpuScheduler() {
+            this.type = "rr";
         }
 
         CpuScheduler.prototype.begin = function() {
@@ -11,6 +12,9 @@ var TSOS;
         };
 
         CpuScheduler.prototype.runAll = function (){
+            if(this.type === "priority")
+                _ReadyQueue.prioritySort();
+
             if(!_ReadyQueue.isEmpty()) {
                 var currentProgram = _ReadyQueue.dequeue();
                 if(currentProgram.state === "Ready"){
@@ -34,42 +38,47 @@ var TSOS;
         };
 
         CpuScheduler.prototype.checkSwitch = function (runningProgram){
-            if(_CycleCount === _Quantum || runningProgram.state === "Terminated"){
-                _CycleCount = 0;
-                if(runningProgram.state !== "Terminated"){
-                    if(_ReadyQueue.isEmpty()){
-                        runningProgram.state = "Running"
-                    } else {
-                        runningProgram.state = "Waiting";
+            if(this.type === "rr") {
+                if (_CycleCount === _Quantum || runningProgram.state === "Terminated") {
+                    _CycleCount = 0;
+                    if (runningProgram.state !== "Terminated") {
+                        if (_ReadyQueue.isEmpty()) {
+                            runningProgram.state = "Running"
+                        } else {
+                            runningProgram.state = "Waiting";
+                        }
+                        updateCurrentPcb(runningProgram);
+                        _ReadyQueue.enqueue(runningProgram);
+                    } else if (_ReadyQueue.isEmpty() && runningProgram.state === "Terminated") {
+                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
+                        _Scheduling = false;
                     }
-                    updateCurrentPcb(runningProgram);
-                    _ReadyQueue.enqueue(runningProgram);
-                } else if(_ReadyQueue.isEmpty() && runningProgram.state === "Terminated"){
-                    _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
-                    _Scheduling = false;
+                    this.runAll();
                 }
-                this.runAll();
+            } else if(this.type === "fcfs" || this.type === "priority"){
+                if (runningProgram.state === "Terminated") {
+                    _CycleCount = 0;
+                    if (runningProgram.state !== "Terminated") {
+                        if (_ReadyQueue.isEmpty()) {
+                            runningProgram.state = "Running"
+                        } else {
+                            runningProgram.state = "Waiting";
+                        }
+                        updateCurrentPcb(runningProgram);
+                        _ReadyQueue.enqueue(runningProgram);
+                    } else if (_ReadyQueue.isEmpty() && runningProgram.state === "Terminated") {
+                        _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
+                        _Scheduling = false;
+                    }
+                    this.runAll();
+                }
             }
-
-
 
         };
 
         CpuScheduler.prototype.complete = function (runningProgram){
             _CPU.isExecuting = false;
         };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         return CpuScheduler;

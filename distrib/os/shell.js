@@ -78,7 +78,7 @@ var TSOS;
             this.commandList[this.commandList.length] = sc;
 
             // Load, validates the hex code in the program input box
-            sc = new TSOS.ShellCommand(this.shellLoad, "load", "- Loads user input into memory.");
+            sc = new TSOS.ShellCommand(this.shellLoad, "load", "<Priority> - Loads user input into memory with an optional priority (0-10).");
             this.commandList[this.commandList.length] = sc;
 
             // run <pid>, used to run a program with given pid
@@ -103,6 +103,12 @@ var TSOS;
 
             // kill <id> - kills the specified process id.
             sc = new TSOS.ShellCommand(this.shellKill, "kill", "<PID> Kills a specified running program.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.getSchedule, "getschedule", "Displays the current scheduling algorithms.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.setSchedule, "setschedule", "<String> Sets the scheduling algorithm.");
             this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
@@ -355,7 +361,7 @@ var TSOS;
           element of the array passes the test, then call the memory manager and load the program
           into memory.
                                                                                               */
-        Shell.prototype.shellLoad = function () {
+        Shell.prototype.shellLoad = function (args) {
             var userInput = document.getElementById("taProgramInput").value.trim();
             var inputArray = userInput.split(" ");
             // Count used for match counting purposes
@@ -384,7 +390,19 @@ var TSOS;
             if (count === inputArray.length) {
                 _StdOut.putText("Loading program into memory...");
                 _StdOut.advanceLine();
-                _MemoryManager.load(userInput);
+
+                if (args.length >= 1) {
+                    var priority = parseInt(args[0]);
+                    if (priority > 10 || priority < 0 || isNaN(priority)) {
+                        _StdOut.putText("Invalid priority. Setting to default priority of 10.");
+                        _StdOut.advanceLine();
+                        _MemoryManager.load(userInput, 10);
+                    } else {
+                        _MemoryManager.load(userInput, priority);
+                    }
+                } else {
+                    _MemoryManager.load(userInput, 10);
+                }
              } else {
                 _StdOut.putText("User Program Input is not valid hexadecimal.");
                 _StdOut.advanceLine();
@@ -467,6 +485,36 @@ var TSOS;
                 }
             } else {
                 _StdOut.putText("There are no running processes!")
+            }
+        };
+
+        Shell.prototype.getSchedule = function () {
+            var type = _CpuScheduler.type;
+            _StdOut.putText("Current Scheduling Algorithm: ");
+            _StdOut.advanceLine();
+
+            if(type === "rr")
+                _StdOut.putText("Round Robin");
+            else if (type === "fcfs")
+                _StdOut.putText("First Come First Served");
+            else if (type === "priority")
+                _StdOut.putText("Priority");
+        };
+
+        Shell.prototype.setSchedule = function (args) {
+            if(args[0] == "rr") {
+                _CpuScheduler.type = "rr";
+                _StdOut.putText("Scheduling Algorithm set to Round Robin.");
+            } else if(args[0] == "fcfs") {
+                _CpuScheduler.type = "fcfs";
+                _StdOut.putText("Scheduling Algorithm set to First Come First Served.");
+            } else if(args[0] == "priority"){
+                _CpuScheduler.type = "priority";
+                _StdOut.putText("Scheduling Algorithm set to Priority.");
+            } else {
+                _StdOut.putText("That is not a valid scheduling algorithm. Available algorithms:");
+                _StdOut.advanceLine();
+                _StdOut.putText("rr, fcfs, priority");
             }
         };
 

@@ -100,7 +100,8 @@ function updateCurrentPcb(pcb){
                 '<td class="Yreg">' + pcb.Yreg + '</td>' +
                 '<td class="Zflag">' + pcb.Zflag + '</td>' +
                 '<td class="base">' + pcb.base + '</td>' +
-                '<td class="limit">' + pcb.limit + '</td>');
+                '<td class="limit">' + pcb.limit + '</td>' +
+                '<td class="priority">' + pcb.priority + '</td>');
         }
     }
 
@@ -156,7 +157,8 @@ function createPcbRow(pcb) {
     '<td class="Yreg">' + pcb.Yreg + '</td>' +
     '<td class="Zflag">' + pcb.Zflag + '</td>' +
     '<td class="base">' + pcb.base + '</td>' +
-    '<td class="limit">' + pcb.limit + '</td>';
+    '<td class="limit">' + pcb.limit + '</td>' +
+    '<td class="priority">' + pcb.priority + '</td>';
     pcbTable.find('tbody').append(newRow);
 }
 

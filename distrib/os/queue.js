@@ -14,6 +14,9 @@ var TSOS;
             if (q === void 0) { q = new Array(); }
             this.q = q;
         }
+        Queue.prototype.prioritySort = function (){
+          this.q.sort(function(a, b){return a.priority - b.priority});
+        };
         Queue.prototype.getSize = function () {
             return this.q.length;
         };

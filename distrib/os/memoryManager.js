@@ -11,7 +11,7 @@ var TSOS;
             _ReadyQueue = new TSOS.Queue;
         };
 
-        MemoryManager.prototype.load = function (hex){
+        MemoryManager.prototype.load = function (hex, priority){
             // Split user input into an array
             var hexArray = hex.toUpperCase().split(" ");
 
@@ -26,18 +26,20 @@ var TSOS;
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment0, "Ready");
+                    this.createPCB(this.memory.segment0, "Ready", priority);
                 } else if(this.memory.storedData[this.memory.segment1] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment1] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment1, "Ready");
+                    this.createPCB(this.memory.segment1, "Ready", priority);
                 }  else if(this.memory.storedData[this.memory.segment2] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment2] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment2, "Ready");
-                } else {
+                    this.createPCB(this.memory.segment2, "Ready", priority);
+                }
+
+                else {
                     _StdOut.putText("There is no available memory.");
                     _StdOut.advanceLine();
                     _StdOut.putText("You can use clearmem to clear all current programs in memory.");
@@ -46,15 +48,13 @@ var TSOS;
                 _ProgramLength = hexArray.length;
                 // Add new hex array to memory
 
-
-
                 // Update the memory table
                 updateMemory(this.memory);
             }
 
         };
 
-        MemoryManager.prototype.createPCB = function (base, state){
+        MemoryManager.prototype.createPCB = function (base, state, priority){
             // Increment PID for next program loaded
             _PID++;
 
@@ -62,12 +62,15 @@ var TSOS;
             this.pcb.base = base;
             this.pcb.state = state;
             this.pcb.limit = base += _ProgramSize;
+            this.pcb.priority = priority;
             _ResidentList.push(this.pcb);
             createPcbRow(this.pcb);
             // Update pcb display
 
 
             _StdOut.putText("Program loaded: PID " + this.pcb.PID);
+            _StdOut.advanceLine();
+            _StdOut.putText("Program priority: " + priority);
 
         };
 

@@ -11,6 +11,7 @@ var TSOS;
             this.Zflag = 0;
             this.base = 0;
             this.limit = 255;
+            this.priority = 10;
         }
 
         return Pcb;
