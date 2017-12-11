@@ -165,6 +165,9 @@ function createPcbRow(pcb) {
 function updateFileSystem(){
     var table = $('#diskDiv');
     var html = '<tbody>';
+    var header = '<th>TSB</th>' +
+        '<th>Meta Data</th>' +
+        '<th>Stored Data</th>';
     for (var t = 0; t < _FileSystem.tracks; t++) {
         for (var s = 0; s < _FileSystem.sectors; s++) {
             for (var b = 0; b < _FileSystem.blocks; b++) {
@@ -175,6 +178,8 @@ function updateFileSystem(){
         }
     }
     html += '</tbody>';
+    table.find('thead').replaceWith(header);
     table.find('tbody').replaceWith(html);
+
 }
 
