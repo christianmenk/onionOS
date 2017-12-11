@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html xmlns:style="http://www.w3.org/1999/xhtml">
 <head>
    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
    <meta name="author"             content="Alan G. Labouseur" />
@@ -32,6 +32,7 @@
     <script type="text/javascript" src="distrib/os/memoryManager.js"></script>
     <script type="text/javascript" src="distrib/os/pcb.js"></script>
     <script type="text/javascript" src="distrib/os/CpuScheduler.js"></script>
+    <script type="text/javascript" src="distrib/os/deviceDriverFileSystem.js"></script>
 
    <!-- Other Routines -->
    <script type="text/javascript" src="distrib/utils.js"></script>
@@ -193,12 +194,17 @@
 
             <br>
 
-        <div style="margin-top:8px; margin-left: 10px;">
+        <div  id="diskDiv" style="margin-top:8px; margin-left: 10px;">
         <label>
             File System
             <br>
             <div style="height:147px; width:600px; overflow-y:scroll;">
                 <table id="diskTable" style="width:583px;height:147px;">
+                    <thead>
+                        <th>TSB</th>
+                        <th>Meta Data</th>
+                        <th>Stored Data</th>
+                    </thead>
                     <tbody>
                     <td>File system needs to be formatted</td>
                     </tbody>

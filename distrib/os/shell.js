@@ -110,6 +110,9 @@ var TSOS;
 
             sc = new TSOS.ShellCommand(this.setSchedule, "setschedule", "<String> Sets the scheduling algorithm.");
             this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.format, "format", "Formats the file system for use.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -516,6 +519,10 @@ var TSOS;
                 _StdOut.advanceLine();
                 _StdOut.putText("rr, fcfs, priority");
             }
+        };
+
+        Shell.prototype.format = function () {
+            _FileSystem.format();
         };
 
 

@@ -83,6 +83,7 @@ var TSOS;
 
             _MemoryManager = new TSOS.MemoryManager();
             _CpuScheduler = new TSOS.CpuScheduler();
+            _FileSystem = new TSOS.DeviceDriverFileSystem();
 
 
             // .. and call the OS Kernel Bootstrap routine.

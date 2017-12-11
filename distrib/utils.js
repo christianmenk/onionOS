@@ -162,3 +162,19 @@ function createPcbRow(pcb) {
     pcbTable.find('tbody').append(newRow);
 }
 
+function updateFileSystem(){
+    var table = $('#diskDiv');
+    var html = '<tbody>';
+    for (var t = 0; t < _FileSystem.tracks; t++) {
+        for (var s = 0; s < _FileSystem.sectors; s++) {
+            for (var b = 0; b < _FileSystem.blocks; b++) {
+                var TSB = t.toString() + s.toString() + b.toString();
+                var rowData = sessionStorage.getItem(TSB);
+                html += '<tr><td>' + TSB + '</td>' + '<td>' + rowData.substring(0, 4) + '</td>'+ '<td>' + rowData.substring(4) + '</td></tr>';
+            }
+        }
+    }
+    html += '</tbody>';
+    table.find('tbody').replaceWith(html);
+}
+
