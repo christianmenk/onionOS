@@ -545,7 +545,7 @@ var TSOS;
         Shell.prototype.create = function (args) {
             if(_FileSystem.isFormatted) {
                 if (args.length > 0)
-                    _FileSystem.createFile(args[0].toString());
+                    _FileSystem.createFile(args[0].toString(), "file");
                 else
                     _StdOut.putText("Please specify a file name to create.");
             } else {
@@ -561,7 +561,7 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _FileSystem.writeToFile(name, writeData);
+                    _FileSystem.writeToFile(name, writeData, "file");
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
@@ -584,7 +584,7 @@ var TSOS;
         Shell.prototype.delete = function (args) {
             if(_FileSystem.isFormatted) {
                 if (args.length > 0)
-                    _FileSystem.deleteFile(args[0].toString());
+                    _FileSystem.deleteFile(args[0].toString(), "file");
                 else
                     _StdOut.putText("Please specify a file name to delete.");
             } else {

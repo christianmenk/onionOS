@@ -12,6 +12,7 @@ var TSOS;
             this.base = 0;
             this.limit = 255;
             this.priority = 10;
+            this.location = "";
         }
 
         return Pcb;

@@ -26,23 +26,32 @@ var TSOS;
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment0, "Ready", priority);
+                    this.createPCB(this.memory.segment0, "Ready", priority, "Memory");
                 } else if(this.memory.storedData[this.memory.segment1] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment1] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment1, "Ready", priority);
+                    this.createPCB(this.memory.segment1, "Ready", priority, "Memory");
                 }  else if(this.memory.storedData[this.memory.segment2] === "00"){
                     for (var i = 0; i < hexArray.length; i++) {
                         this.memory.storedData[i + this.memory.segment2] = hexArray[i];
                     }
-                    this.createPCB(this.memory.segment2, "Ready", priority);
+                    this.createPCB(this.memory.segment2, "Ready", priority, "Memory");
                 }
 
                 else {
-                    _StdOut.putText("There is no available memory.");
-                    _StdOut.advanceLine();
-                    _StdOut.putText("You can use clearmem to clear all current programs in memory.");
+                    if(_FileSystem.isFormatted === true){
+                        this.createPCB(0, "Ready", priority, "Disk");
+                        var progName = "program" + _PID;
+                        _FileSystem.createFile(progName, "program");
+                        _FileSystem.writeToFile(progName, hex.toUpperCase());
+
+                    } else {
+                        _StdOut.putText("There is no available memory.");
+                        _StdOut.advanceLine();
+                        _StdOut.putText("To store more programs, you must format the file system.");
+                        _StdOut.advanceLine();
+                    }
                 }
 
                 _ProgramLength = hexArray.length;
@@ -54,15 +63,24 @@ var TSOS;
 
         };
 
-        MemoryManager.prototype.createPCB = function (base, state, priority){
+        MemoryManager.prototype.createPCB = function (base, state, priority, location){
             // Increment PID for next program loaded
             _PID++;
 
             this.pcb = new TSOS.Pcb(_PID);
-            this.pcb.base = base;
             this.pcb.state = state;
-            this.pcb.limit = base += _ProgramSize;
             this.pcb.priority = priority;
+            this.pcb.location = location;
+
+            if(location === "Disk") {
+                this.pcb.base = "-";
+                this.pcb.limit = "-";
+            } else {
+                this.pcb.base = base;
+                this.pcb.limit = base += _ProgramSize;
+
+            }
+
             _ResidentList.push(this.pcb);
             createPcbRow(this.pcb);
             // Update pcb display

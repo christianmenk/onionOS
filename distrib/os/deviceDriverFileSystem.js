@@ -27,7 +27,7 @@ var TSOS;
 
         };
 
-        DeviceDriverFileSystem.prototype.createFile = function(name) {
+        DeviceDriverFileSystem.prototype.createFile = function(name, type) {
             var dirLoc = this.getNextDirectoryLocation();
             var fileLoc = this.getNextFileLocation();
             var metaData = "1" + fileLoc;
@@ -36,6 +36,7 @@ var TSOS;
             sessionStorage.setItem(dirLoc, metaData + hexName);
             sessionStorage.setItem(fileLoc, "1---");
 
+            if(type === "file")
             _StdOut.putText("Successfully created file: " + name);
 
             updateFileSystem();
@@ -61,7 +62,7 @@ var TSOS;
             return newString;
         };
 
-        DeviceDriverFileSystem.prototype.writeToFile = function(name, data) {
+        DeviceDriverFileSystem.prototype.writeToFile = function(name, data, type) {
             var hexName = this.formatToHex(name);
             var location = this.getFileLocation(hexName);
             console.log(name);
@@ -69,7 +70,13 @@ var TSOS;
              if(location !== null){
                  var dataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
                  var metaData = "1" + dataLoc;
-                 var newData = this.formatToHex(data);
+                 var newData = "";
+
+                 if(type === "file")
+                     newData = this.formatToHex(data);
+                 else
+                     newData = data.replace(/ /g, '');
+
                  var dataBlocks = [];
 
                  while (newData.length) {
@@ -78,15 +85,19 @@ var TSOS;
                  }
 
                  for(var i = 0; i < dataBlocks.length; i++){
+
                      if(i !== dataBlocks.length - 1)
-                        metaData = "1" + dataLoc;
+                        metaData = "1" + (dataLoc + 1);
                      else
                         metaData = "1---";
                      sessionStorage.setItem((dataLoc + ""), (metaData + dataBlocks[i]));
                      dataLoc++;
+
                  }
 
-                 _StdOut.putText("Successfully wrote data to " + name + "!");
+                 if(type === "file")
+                    _StdOut.putText("Successfully wrote data to " + name + "!");
+
              } else {
                  _StdOut.putText("That file does not exist.");
              }
@@ -159,12 +170,12 @@ var TSOS;
                     var location = "0" + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
                     if(data.indexOf("0") !== 0){
-                        files.push(data.slice(4, data.length));
+                        files.push(this.formatToString(data.slice(4, data.length)));
                     }
                 }
             }
 
-            if(files === []){
+            if(files.length <= 0){
                 _StdOut.putText("There are no files stored in the file system.");
             } else {
                 _StdOut.putText("Files stored on file system:");
