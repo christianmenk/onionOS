@@ -166,14 +166,15 @@ function updateFileSystem(){
     var table = $('#diskDiv');
     var html = '<tbody>';
     var header = '<th>TSB</th>' +
-        '<th>Meta Data</th>' +
+        '<th>Active</th>' +
+        '<th>Location</th>' +
         '<th>Stored Data</th>';
     for (var t = 0; t < _FileSystem.tracks; t++) {
         for (var s = 0; s < _FileSystem.sectors; s++) {
             for (var b = 0; b < _FileSystem.blocks; b++) {
                 var TSB = t.toString() + s.toString() + b.toString();
                 var rowData = sessionStorage.getItem(TSB);
-                html += '<tr><td>' + TSB + '</td>' + '<td>' + rowData.substring(0, 4) + '</td>'+ '<td>' + rowData.substring(4) + '</td></tr>';
+                html += '<tr><td>' + TSB + '</td>' + '<td>' + rowData.substring(0, 1) + '</td>' + '<td>' + rowData.substring(1, 4) + '</td>'+ '<td>' + rowData.substring(4) + '</td></tr>';
             }
         }
     }

@@ -14,7 +14,7 @@ var TSOS;
             sessionStorage.clear();
             var emptyData = "";
             for(var i = 0; i < this.bytes; i++) {
-                emptyData += "-";
+                emptyData += "0";
             }
             for (var t = 0; t < this.tracks; t++) {
                 for (var s = 0; s < this.sectors; s++) {
@@ -23,16 +23,17 @@ var TSOS;
                     }
                 }
             }
-            // Create MBR
-            sessionStorage.setItem( "000", "1---MBR");
             updateFileSystem();
+
         };
 
         DeviceDriverFileSystem.prototype.createFile = function(name) {
             var dirLoc = this.getNextDirectoryLocation();
             var fileLoc = this.getNextFileLocation();
             var metaData = "1" + fileLoc;
-            sessionStorage.setItem(dirLoc, metaData + name);
+            var hexName = this.formatToHex(name);
+            console.log(hexName);
+            sessionStorage.setItem(dirLoc, metaData + hexName);
             sessionStorage.setItem(fileLoc, "1---");
 
             _StdOut.putText("Successfully created file: " + name);
@@ -40,14 +41,35 @@ var TSOS;
             updateFileSystem();
         };
 
+        DeviceDriverFileSystem.prototype.formatToHex = function(name) {
+            var newData = "";
+            for (var i = 0; i < name.length; i++) {
+                newData += name.charCodeAt(i).toString(16)
+            }
+            return newData;
+        };
+
+        DeviceDriverFileSystem.prototype.formatToString = function(hex) {
+            var newString = "";
+            for (var i = 0; i < hex.length; i += 2) {
+                var text = parseInt(hex.charAt(i) + hex.charAt(i + 1), 16);
+                if (text !== 0) {
+                    newString += String.fromCharCode(text);
+                }
+            }
+
+            return newString;
+        };
+
         DeviceDriverFileSystem.prototype.writeToFile = function(name, data) {
-            var location = this.getFileLocation(name);
+            var hexName = this.formatToHex(name);
+            var location = this.getFileLocation(hexName);
             console.log(name);
 
              if(location !== null){
                  var dataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
                  var metaData = "1" + dataLoc;
-                 var newData = data;
+                 var newData = this.formatToHex(data);
                  var dataBlocks = [];
 
                  while (newData.length) {
@@ -72,7 +94,8 @@ var TSOS;
         };
 
         DeviceDriverFileSystem.prototype.readFile = function(name) {
-            var location = this.getFileLocation(name);
+            var hexName = this.formatToHex(name);
+            var location = this.getFileLocation(hexName);
 
             if(location !== null){
                 var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
@@ -80,14 +103,14 @@ var TSOS;
                 _StdOut.putText("Here are the contents of the " + name + ":");
                 _StdOut.advanceLine();
                 while(fileData.slice(0,4) !== "1---"){
-                    _StdOut.putText(fileData.slice(4, fileData.length));
+                    _StdOut.putText(this.formatToString(fileData.slice(4, fileData.length)));
                     _StdOut.advanceLine();
                     fileDataLoc++;
                     fileData = sessionStorage.getItem(fileDataLoc + "");
                 }
 
                 if(fileData.slice(0,4) === "1---"){
-                    _StdOut.putText(fileData.slice(4, fileData.length));
+                    _StdOut.putText(this.formatToString(fileData.slice(4, fileData.length)));
                 }
 
 
@@ -97,10 +120,11 @@ var TSOS;
         };
 
         DeviceDriverFileSystem.prototype.deleteFile = function(name) {
-            var location = this.getFileLocation(name);
+            var hexName = this.formatToHex(name);
+            var location = this.getFileLocation(hexName);
             var emptyData = "";
             for(var i = 0; i < this.bytes; i++) {
-                emptyData += "-";
+                emptyData += "0";
             }
 
 
@@ -134,7 +158,7 @@ var TSOS;
                 for (var b = 0; b < this.blocks; b++) {
                     var location = "0" + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
-                    if(data.indexOf("-") !== 0){
+                    if(data.indexOf("0") !== 0){
                         files.push(data.slice(4, data.length));
                     }
                 }
@@ -154,7 +178,7 @@ var TSOS;
                 for (var b = 0; b < this.blocks; b++) {
                     var location = "0" + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
-                    if(data.indexOf("-") !== 0 && data.indexOf(name) === 4){
+                    if(data.indexOf("0") !== 0 && data.indexOf(name) === 4){
                         return location;
                     }
                 }
@@ -168,7 +192,7 @@ var TSOS;
                 for (var b = 0; b < this.blocks; b++) {
                     var location = "0" + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
-                    if(data.indexOf("-") === 0){
+                    if(data.indexOf("0") === 0){
                         return location;
                     }
                 }
@@ -181,7 +205,7 @@ var TSOS;
                 for (var b = 0; b < this.blocks; b++) {
                     var location = t.toString() + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
-                    if(data.indexOf("-") === 0){
+                    if(data.indexOf("0") === 0){
                         return location;
                     }
                 }
