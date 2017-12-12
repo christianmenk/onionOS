@@ -90,6 +90,7 @@ var TSOS;
                         metaData = "1" + (dataLoc + 1);
                      else
                         metaData = "1---";
+
                      sessionStorage.setItem((dataLoc + ""), (metaData + dataBlocks[i]));
                      dataLoc++;
 

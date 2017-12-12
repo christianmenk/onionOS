@@ -88,7 +88,7 @@
 
        <div id="divConsole" style="margin:4px; width:583px; height:582px; float:left;" >
        <canvas id="display"
-               width="583px"
+               width="600px"
                height="582px"
                tabindex="3">
        </canvas>
@@ -98,8 +98,8 @@
            <label>
                Memory
                <br>
-               <div style="height:147px; width:600px; overflow-y:scroll;">
-                   <table id="memoryTable" style="width:583px;height:147px;">
+               <div class="memdiv" style="height:147px; width:600px; overflow-y:scroll;">
+                   <table id="memoryTable" style="border:none; width:583px;height:147px;">
                        <tbody>
                        <td>Memory will be initialized on start</td>
                        </tbody>
@@ -109,7 +109,27 @@
 
         </div>
 
-        <div id="divLog" style="margin-left:600px;">
+        <div  id="diskDiv" style="float:right; margin-right: 190px;">
+            <label>
+                File System
+                <br>
+                <div class="memdiv" style="height:470px;width:718px; overflow-y:scroll;">
+                    <table id="diskTable" style="border:none; width:700px;height:470px;">
+                        <thead>
+
+                        </thead>
+                        <tbody>
+                        <td>File system needs to be formatted</td>
+                        </tbody>
+                    </table>
+                </div>
+            </label>
+        </div>
+
+
+
+
+        <div id="divLog" style="margin-left:620px;">
             <label>
                 Host Log
                 <br>
@@ -122,7 +142,21 @@
             </label>
         </div>
 
-        <div id="cpu" style="margin-left: 600px">
+        <div id = "inputDiv" style="margin-left: 620px">
+            <label>
+                User Program Input
+                <br>
+                <textarea name="taProgramInput"
+                          id  ="taProgramInput"
+                          rows="8"
+                          cols="48"
+                >A9 03 8D 41 00 A9 01 8D 40 00 AC 40 00 A2 01 FF EE 40 00 AE 40 00 EC 41 00 D0 EF A9 44 8D 42 00 A9 4F 8D 43 00 A9 4E 8D 44 00 A9 45 8D 45 00 A9 00 8D 46 00 A2 02 A0 42 FF 00</textarea>
+            </label>
+
+            <br>
+        </div>
+
+        <div id="cpu" style="margin-left: 620px">
             <label>
                 CPU
                 <br>
@@ -137,13 +171,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td id="cpuPC"></td>
-                            <td id="cpuAcc"></td>
-                            <td id="cpuX"></td>
-                            <td id="cpuY"></td>
-                            <td id="cpuZ"></td>
-                        </tr>
+                    <tr>
+                        <td id="cpuPC"></td>
+                        <td id="cpuAcc"></td>
+                        <td id="cpuX"></td>
+                        <td id="cpuY"></td>
+                        <td id="cpuZ"></td>
+                    </tr>
                     </tbody>
                 </table>
             </label>
@@ -151,7 +185,7 @@
 
         <br>
 
-        <div id="memory" style="margin-left: 600px">
+        <div id="memory" style="margin-left: 620px">
             <label>
                 Processes
                 <br>
@@ -179,43 +213,10 @@
             </label>
         </div>
 
-        <br>
 
-
-        <div id = "inputDiv" style="margin-left: 600px">
-            <label>
-                User Program Input
-                <br>
-                <textarea name="taProgramInput"
-                          id  ="taProgramInput"
-                          rows="8"
-                          cols="48"
-                >A9 03 8D 41 00 A9 01 8D 40 00 AC 40 00 A2 01 FF EE 40 00 AE 40 00 EC 41 00 D0 EF A9 44 8D 42 00 A9 4F 8D 43 00 A9 4E 8D 44 00 A9 45 8D 45 00 A9 00 8D 46 00 A2 02 A0 42 FF 00</textarea>
-            </label>
-
-            <br>
-
-        <div  id="diskDiv" style="margin-top:8px; margin-left: 10px;">
-        <label>
-            File System
-            <br>
-            <div style="height:147px; width:700px; overflow-y:scroll;">
-                <table id="diskTable" style="width:700px;height:147px;">
-                    <thead>
-
-                    </thead>
-                    <tbody>
-                    <td>File system needs to be formatted</td>
-                    </tbody>
-                </table>
-            </div>
-        </label>
+        <div id="onionDiv" style="margin-left: 620px">
+            <img id="davos" src="distrib/images/knight.jpg" style="width:400px; height:200px; visibility: hidden;" >
         </div>
-
-        </div>
-        <!--<div id="onionDiv" style="margin-left: 620px">-->
-            <!--<img id="davos" src="distrib/images/knight.jpg" style="width:400px; height:200px; visibility: hidden;" >-->
-        <!--</div>-->
 
 
     </div>

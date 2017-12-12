@@ -17,6 +17,7 @@ var TSOS;
 
             if(!_ReadyQueue.isEmpty()) {
                 var currentProgram = _ReadyQueue.dequeue();
+
                 if(currentProgram.state === "Ready"){
                     _CPU.init(currentProgram, true);
                     currentProgram.state = "Running";
@@ -73,6 +74,8 @@ var TSOS;
                     this.runAll();
                 }
             }
+
+            var lastProgram = runningProgram;
 
         };
 

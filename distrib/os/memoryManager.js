@@ -63,6 +63,8 @@ var TSOS;
 
         };
 
+
+
         MemoryManager.prototype.createPCB = function (base, state, priority, location){
             // Increment PID for next program loaded
             _PID++;
@@ -91,6 +93,7 @@ var TSOS;
             _StdOut.putText("Program priority: " + priority);
 
         };
+
 
         // Inserts data at a given location
         MemoryManager.prototype.insertData = function (data, location){

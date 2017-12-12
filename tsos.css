@@ -54,11 +54,16 @@ textarea {
   background-color:#faefff;
 }
 
-table {
+table, .memdiv {
   border: solid mediumpurple;
   border-collapse: collapse;
   border-width:3px;
   background-color:#faefff;
+}
+
+.memdiv {
+  border-width: 2px;
+  border-right-width: 3px;
 }
 
 th, td {
@@ -70,6 +75,8 @@ th, td {
 th {
   font-size: 15px;
 }
+
+
 
 .footerText {
   color: black;
