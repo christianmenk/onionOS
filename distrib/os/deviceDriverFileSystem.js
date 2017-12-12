@@ -68,11 +68,35 @@ var TSOS;
              } else {
                  _StdOut.putText("That file does not exist.");
              }
-
              updateFileSystem();
         };
 
         DeviceDriverFileSystem.prototype.readFile = function(name) {
+            var location = this.getFileLocation(name);
+            var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
+
+            if(location !== null){
+                var fileData = sessionStorage.getItem(fileDataLoc + "");
+                _StdOut.putText("Here are the contents of the " + name + ":");
+                _StdOut.advanceLine();
+                while(fileData.slice(0,4) !== "1---"){
+                    _StdOut.putText(fileData.slice(4, fileData.length));
+                    _StdOut.advanceLine();
+                    fileDataLoc++;
+                    fileData = sessionStorage.getItem(fileDataLoc + "");
+                }
+
+                if(fileData.slice(0,4) === "1---"){
+                    _StdOut.putText(fileData.slice(4, fileData.length));
+                }
+
+
+            } else {
+                _StdOut.putText("That file does not exist.");
+            }
+        };
+
+        DeviceDriverFileSystem.prototype.deleteFile = function(name) {
             var location = this.getFileLocation();
 
             if(location !== null){
@@ -84,6 +108,8 @@ var TSOS;
                 _StdOut.putText("That file does not exist.");
             }
         };
+
+
 
         DeviceDriverFileSystem.prototype.getFileLocation = function(name) {
             for (var s = 0; s < this.sectors; s++) {

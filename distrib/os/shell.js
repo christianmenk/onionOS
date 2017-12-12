@@ -114,10 +114,13 @@ var TSOS;
             sc = new TSOS.ShellCommand(this.format, "format", "Formats the file system for use.");
             this.commandList[this.commandList.length] = sc;
 
-            sc = new TSOS.ShellCommand(this.create, "create", "Creates a file in the file system.");
+            sc = new TSOS.ShellCommand(this.create, "create", "<File Name> Creates a file in the file system.");
             this.commandList[this.commandList.length] = sc;
 
             sc = new TSOS.ShellCommand(this.write, "write", "<File Name> <Data> Writes data to specified file in the file system.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.read, "read", "<File Name>  Returns data of a specified file in the file system.");
             this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
@@ -440,7 +443,7 @@ var TSOS;
                 for(var i = 0; i < _ResidentList.length; i++){
                     _ReadyQueue.enqueue(_ResidentList[i]);
                 }
-                _StdOut.putText("Executing " + _ReadyQueue.getSize() + " program(s) from memory...")
+                _StdOut.putText("Executing " + _ReadyQueue.getSize() + " program(s) from memory...");
                 _Scheduling = true;
                 _KernelInterruptQueue.enqueue(new TSOS.Interrupt(RUN_ALL_PROG));
             } else {
@@ -552,7 +555,7 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _FileSystem.writeToFile(name, writeData);
+                    _FileSystem.writeToFile(name, document.getElementById("taProgramInput").value.trim());
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
