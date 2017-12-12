@@ -73,9 +73,9 @@ var TSOS;
 
         DeviceDriverFileSystem.prototype.readFile = function(name) {
             var location = this.getFileLocation(name);
-            var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
 
             if(location !== null){
+                var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
                 var fileData = sessionStorage.getItem(fileDataLoc + "");
                 _StdOut.putText("Here are the contents of the " + name + ":");
                 _StdOut.advanceLine();
@@ -97,13 +97,31 @@ var TSOS;
         };
 
         DeviceDriverFileSystem.prototype.deleteFile = function(name) {
-            var location = this.getFileLocation();
+            var location = this.getFileLocation(name);
+            var emptyData = "";
+            for(var i = 0; i < this.bytes; i++) {
+                emptyData += "-";
+            }
+
 
             if(location !== null){
-                var data = sessionStorage.getItem(location);
-                _StdOut.putText("Here are the contents of the " + name + " file:");
-                _StdOut.advanceLine();
-                _StdOut.putText(data.slice(3,data.length));
+                var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
+                var fileData = sessionStorage.getItem(fileDataLoc + "");
+                sessionStorage.setItem(location, emptyData);
+
+                while(fileData.slice(0,4) !== "1---"){
+                    sessionStorage.setItem(fileDataLoc + "", emptyData);
+                    fileDataLoc++;
+                    fileData = sessionStorage.getItem(fileDataLoc + "");
+                }
+
+                if(fileData.slice(0,4) === "1---"){
+                    sessionStorage.setItem(fileDataLoc + "", emptyData);
+                }
+
+
+                _StdOut.putText("Successfully deleted " + name + " from the file system.");
+                updateFileSystem();
             } else {
                 _StdOut.putText("That file does not exist.");
             }

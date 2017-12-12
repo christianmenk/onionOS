@@ -122,6 +122,9 @@ var TSOS;
 
             sc = new TSOS.ShellCommand(this.read, "read", "<File Name>  Returns data of a specified file in the file system.");
             this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.delete, "delete", "<File Name> Deletes a file from the file system.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -541,7 +544,7 @@ var TSOS;
                 if (args.length > 0)
                     _FileSystem.createFile(args[0].toString());
                 else
-                    _StdOut.putText("Please specify a file name.");
+                    _StdOut.putText("Please specify a file name to create.");
             } else {
                 _StdOut.putText("You need to format the file system.");
             }
@@ -555,7 +558,7 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _FileSystem.writeToFile(name, writeData);
+                    _FileSystem.writeToFile(name, document.getElementById("taProgramInput").value.trim());
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
@@ -569,7 +572,18 @@ var TSOS;
                 if (args.length > 0)
                     _FileSystem.readFile(args[0].toString());
                 else
-                    _StdOut.putText("Please specify a file name.");
+                    _StdOut.putText("Please specify a file name to read.");
+            } else {
+                _StdOut.putText("You need to format the file system.");
+            }
+        };
+
+        Shell.prototype.delete = function (args) {
+            if(_FileSystem.isFormatted) {
+                if (args.length > 0)
+                    _FileSystem.deleteFile(args[0].toString());
+                else
+                    _StdOut.putText("Please specify a file name to delete.");
             } else {
                 _StdOut.putText("You need to format the file system.");
             }
