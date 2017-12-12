@@ -555,7 +555,7 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _FileSystem.writeToFile(name, document.getElementById("taProgramInput").value.trim());
+                    _FileSystem.writeToFile(name, writeData);
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
