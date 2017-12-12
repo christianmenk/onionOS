@@ -35,33 +35,68 @@ var TSOS;
             sessionStorage.setItem(dirLoc, metaData + name);
             sessionStorage.setItem(fileLoc, "1---");
 
-            _StdOut.putText(dirLoc + " " + fileLoc);
+            _StdOut.putText("Successfully created file: " + name);
+
             updateFileSystem();
         };
 
         DeviceDriverFileSystem.prototype.writeToFile = function(name, data) {
-             var location = this.getFileLocation(name);
+            var location = this.getFileLocation(name);
             console.log(name);
 
              if(location !== null){
+                 var dataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
+                 var metaData = "1" + dataLoc;
+                 var newData = data;
+                 var dataBlocks = [];
 
+                 while (newData.length) {
+                     dataBlocks.push(newData.slice(0, 60));
+                     newData = newData.slice(60);
+                 }
+
+                 for(var i = 0; i < dataBlocks.length; i++){
+                     if(i !== dataBlocks.length - 1)
+                        metaData = "1" + dataLoc;
+                     else
+                        metaData = "1---";
+                     sessionStorage.setItem((dataLoc + ""), (metaData + dataBlocks[i]));
+                     dataLoc++;
+                 }
+
+                 _StdOut.putText("Successfully wrote data to " + name + "!");
              } else {
-                 _StdOut.putText("That file does not exist.")
+                 _StdOut.putText("That file does not exist.");
              }
 
+             updateFileSystem();
         };
 
+        DeviceDriverFileSystem.prototype.readFile = function(name) {
+            var location = this.getFileLocation();
+
+            if(location !== null){
+                var data = sessionStorage.getItem(location);
+                _StdOut.putText("Here are the contents of the " + name + " file:");
+                _StdOut.advanceLine();
+                _StdOut.putText(data.slice(3,data.length));
+            } else {
+                _StdOut.putText("That file does not exist.");
+            }
+        };
 
         DeviceDriverFileSystem.prototype.getFileLocation = function(name) {
             for (var s = 0; s < this.sectors; s++) {
                 for (var b = 0; b < this.blocks; b++) {
                     var location = "0" + s.toString() + b.toString();
                     var data = sessionStorage.getItem(location);
-                    if(data.indexOf("-") > 3){
-                        console.log(location);
+                    if(data.indexOf("-") !== 0 && data.indexOf(name) === 4){
+                        return location;
                     }
                 }
             }
+            //Return null if not found
+            return null;
         };
 
         DeviceDriverFileSystem.prototype.getNextDirectoryLocation = function() {

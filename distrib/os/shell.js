@@ -552,12 +552,23 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _StdOut.putText("Attempting to write data to " + name + "...");
-                    _StdOut.advanceLine();
                     _FileSystem.writeToFile(name, writeData);
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
+            } else {
+                _StdOut.putText("You need to format the file system.");
+            }
+        };
+
+        Shell.prototype.read = function (args) {
+            if(_FileSystem.isFormatted) {
+                if (args.length > 0)
+                    _FileSystem.readFile(args[0].toString());
+                else
+                    _StdOut.putText("Please specify a file name.");
+            } else {
+                _StdOut.putText("You need to format the file system.");
             }
         };
 
