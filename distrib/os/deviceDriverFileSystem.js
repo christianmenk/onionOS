@@ -119,7 +119,6 @@ var TSOS;
                     sessionStorage.setItem(fileDataLoc + "", emptyData);
                 }
 
-
                 _StdOut.putText("Successfully deleted " + name + " from the file system.");
                 updateFileSystem();
             } else {
@@ -128,6 +127,27 @@ var TSOS;
         };
 
 
+        DeviceDriverFileSystem.prototype.ls = function() {
+            var files = [];
+
+            for (var s = 0; s < this.sectors; s++) {
+                for (var b = 0; b < this.blocks; b++) {
+                    var location = "0" + s.toString() + b.toString();
+                    var data = sessionStorage.getItem(location);
+                    if(data.indexOf("-") !== 0){
+                        files.push(data.slice(4, data.length));
+                    }
+                }
+            }
+
+            if(files === []){
+                _StdOut.putText("There are no files stored in the file system.");
+            } else {
+                _StdOut.putText("Files stored on file system:");
+                _StdOut.advanceLine();
+                _StdOut.putText(files.toString());
+            }
+        };
 
         DeviceDriverFileSystem.prototype.getFileLocation = function(name) {
             for (var s = 0; s < this.sectors; s++) {

@@ -125,6 +125,9 @@ var TSOS;
 
             sc = new TSOS.ShellCommand(this.delete, "delete", "<File Name> Deletes a file from the file system.");
             this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.ls, "ls", "Lists all files currently stored in memory.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -558,7 +561,7 @@ var TSOS;
                     for (var i = 1; i < args.length; i++) {
                         writeData += args[i] + " ";
                     }
-                    _FileSystem.writeToFile(name, document.getElementById("taProgramInput").value.trim());
+                    _FileSystem.writeToFile(name, writeData);
                 } else {
                     _StdOut.putText("Please supply a file name and the data to write to it.")
                 }
@@ -584,6 +587,14 @@ var TSOS;
                     _FileSystem.deleteFile(args[0].toString());
                 else
                     _StdOut.putText("Please specify a file name to delete.");
+            } else {
+                _StdOut.putText("You need to format the file system.");
+            }
+        };
+
+        Shell.prototype.ls = function () {
+            if(_FileSystem.isFormatted) {
+                _FileSystem.ls();
             } else {
                 _StdOut.putText("You need to format the file system.");
             }
