@@ -113,6 +113,12 @@ var TSOS;
 
             sc = new TSOS.ShellCommand(this.format, "format", "Formats the file system for use.");
             this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.create, "create", "Creates a file in the file system.");
+            this.commandList[this.commandList.length] = sc;
+
+            sc = new TSOS.ShellCommand(this.write, "write", "<File Name> <Data> Writes data to specified file in the file system.");
+            this.commandList[this.commandList.length] = sc;
             //
             // Display the initial prompt.
             this.putPrompt();
@@ -523,6 +529,36 @@ var TSOS;
 
         Shell.prototype.format = function () {
             _FileSystem.format();
+            _StdOut.putText("Successfully formatted file system.");
+            _StdOut.advanceLine();
+        };
+
+        Shell.prototype.create = function (args) {
+            if(_FileSystem.isFormatted) {
+                if (args.length > 0)
+                    _FileSystem.createFile(args[0].toString());
+                else
+                    _StdOut.putText("Please specify a file name.");
+            } else {
+                _StdOut.putText("You need to format the file system.");
+            }
+        };
+
+        Shell.prototype.write = function (args) {
+            if(_FileSystem.isFormatted) {
+                if (args.length >= 2){
+                    var name = args[0].toString();
+                    var writeData = "";
+                    for (var i = 1; i < args.length; i++) {
+                        writeData += args[i] + " ";
+                    }
+                    _StdOut.putText("Attempting to write data to " + name + "...");
+                    _StdOut.advanceLine();
+                    _FileSystem.writeToFile(name, writeData);
+                } else {
+                    _StdOut.putText("Please supply a file name and the data to write to it.")
+                }
+            }
         };
 
 
