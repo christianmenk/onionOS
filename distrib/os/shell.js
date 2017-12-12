@@ -573,7 +573,7 @@ var TSOS;
         Shell.prototype.read = function (args) {
             if(_FileSystem.isFormatted) {
                 if (args.length > 0)
-                    _FileSystem.readFile(args[0].toString());
+                    _FileSystem.readFile(args[0].toString(), "file");
                 else
                     _StdOut.putText("Please specify a file name to read.");
             } else {

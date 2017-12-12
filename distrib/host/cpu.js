@@ -66,7 +66,6 @@ var TSOS;
             _Kernel.krnTrace('CPU cycle');
             // TODO: Accumulate CPU usage and profiling statistics here.
             _CycleCount++;
-            console.log(this.PC);
             this.executeProgram(_MemoryManager.memory.storedData[this.PC]);
             updateCpu(this.currentPcb.base);
             updateMemory(_MemoryManager.memory);

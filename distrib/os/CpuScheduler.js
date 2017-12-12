@@ -18,6 +18,10 @@ var TSOS;
             if(!_ReadyQueue.isEmpty()) {
                 var currentProgram = _ReadyQueue.dequeue();
 
+                if(currentProgram.location === "Disk"){
+                   currentProgram = this.rollInOut(currentProgram);
+                }
+
                 if(currentProgram.state === "Ready"){
                     _CPU.init(currentProgram, true);
                     currentProgram.state = "Running";
@@ -29,6 +33,47 @@ var TSOS;
 
         };
 
+        CpuScheduler.prototype.rollInOut = function (currentProgram) {
+            // Obtain old program's base/limit
+            currentProgram.base = _LastProgram.base;
+            currentProgram.limit = _LastProgram.limit;
+            currentProgram.location = "Memory";
+
+            _LastProgram.base = "-";
+            _LastProgram.limit = "-";
+            _LastProgram.location = "Disk";
+            _LastProgram.state = "Waiting";
+
+
+            var newHex = _FileSystem.readFile("program" + currentProgram.PID, "program");
+            console.log(newHex);
+            var newHexArray = newHex.toUpperCase().split(" ");
+
+            // Get last program's data, free up memory
+            var lastHex = "";
+            for(var i = _LastProgram.base; i < _LastProgram.limit; i++){
+                lastHex += _MemoryManager.memory.storedData[i] + " ";
+                _MemoryManager.memory.storedData[i] = "00";
+            }
+
+            // Enter in new program's data
+            for(var i = 0; i < newHexArray.length; i++){
+                _MemoryManager.memory.storedData[i + _LastProgram.limit] = newHexArray[i];
+            }
+
+            _FileSystem.deleteFile("program" + currentProgram.PID);
+            _FileSystem.createFile("program" + _LastProgram.PID, "program");
+            _FileSystem.writeToFile("program" + _LastProgram.PID, lastHex.trim(), "program");
+
+            updateCurrentPcb(currentProgram);
+            updateCurrentPcb(_LastProgram);
+            updateMemory(_MemoryManager.memory.storedData);
+
+            return currentProgram;
+
+        };
+
+
         CpuScheduler.prototype.contextSwitch = function (runningProgram) {
             _CPU.PC = runningProgram.PC;
             _CPU.Acc = runningProgram.Acc;
@@ -39,6 +84,7 @@ var TSOS;
         };
 
         CpuScheduler.prototype.checkSwitch = function (runningProgram){
+            _LastProgram = runningProgram;
             if(this.type === "rr") {
                 if (_CycleCount === _Quantum || runningProgram.state === "Terminated") {
                     _CycleCount = 0;
@@ -75,7 +121,7 @@ var TSOS;
                 }
             }
 
-            var lastProgram = runningProgram;
+
 
         };
 

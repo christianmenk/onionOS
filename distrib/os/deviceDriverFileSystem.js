@@ -32,7 +32,6 @@ var TSOS;
             var fileLoc = this.getNextFileLocation();
             var metaData = "1" + fileLoc;
             var hexName = this.formatToHex(name);
-            console.log(hexName);
             sessionStorage.setItem(dirLoc, metaData + hexName);
             sessionStorage.setItem(fileLoc, "1---");
 
@@ -65,7 +64,6 @@ var TSOS;
         DeviceDriverFileSystem.prototype.writeToFile = function(name, data, type) {
             var hexName = this.formatToHex(name);
             var location = this.getFileLocation(hexName);
-            console.log(name);
 
              if(location !== null){
                  var dataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
@@ -75,7 +73,7 @@ var TSOS;
                  if(type === "file")
                      newData = this.formatToHex(data);
                  else
-                     newData = data.replace(/ /g, '');
+                     newData = data;
 
                  var dataBlocks = [];
 
@@ -105,25 +103,42 @@ var TSOS;
              updateFileSystem();
         };
 
-        DeviceDriverFileSystem.prototype.readFile = function(name) {
+        DeviceDriverFileSystem.prototype.readFile = function(name, type) {
             var hexName = this.formatToHex(name);
             var location = this.getFileLocation(hexName);
 
             if(location !== null){
                 var fileDataLoc = parseInt(sessionStorage.getItem(location).slice(1, 4));
                 var fileData = sessionStorage.getItem(fileDataLoc + "");
-                _StdOut.putText("Here are the contents of the " + name + ":");
-                _StdOut.advanceLine();
-                while(fileData.slice(0,4) !== "1---"){
-                    _StdOut.putText(this.formatToString(fileData.slice(4, fileData.length)));
+
+                var result = "";
+                if(type === "file") {
+                    _StdOut.putText("Here are the contents of the " + name + ":");
                     _StdOut.advanceLine();
+                }
+                while (fileData.slice(0, 4) !== "1---") {
+                    if(type === "file")
+                        result += this.formatToString(fileData.slice(4, fileData.length));
+                    else
+                        result += fileData.slice(4, fileData.length);
+
                     fileDataLoc++;
                     fileData = sessionStorage.getItem(fileDataLoc + "");
                 }
 
-                if(fileData.slice(0,4) === "1---"){
-                    _StdOut.putText(this.formatToString(fileData.slice(4, fileData.length)));
+                if (fileData.slice(0, 4) === "1---") {
+                    if(type === "file") {
+                        result += this.formatToString(fileData.slice(4, fileData.length));
+                        _StdOut.putText(result)
+                    } else {
+                        result += fileData.slice(4, fileData.length)
+                    }
+
+
                 }
+
+                if(type === "program")
+                    return result;
 
 
             } else {
@@ -131,7 +146,7 @@ var TSOS;
             }
         };
 
-        DeviceDriverFileSystem.prototype.deleteFile = function(name) {
+        DeviceDriverFileSystem.prototype.deleteFile = function(name, type) {
             var hexName = this.formatToHex(name);
             var location = this.getFileLocation(hexName);
             var emptyData = "";
@@ -155,7 +170,9 @@ var TSOS;
                     sessionStorage.setItem(fileDataLoc + "", emptyData);
                 }
 
-                _StdOut.putText("Successfully deleted " + name + " from the file system.");
+                if(type === "file")
+                  _StdOut.putText("Successfully deleted " + name + " from the file system.");
+
                 updateFileSystem();
             } else {
                 _StdOut.putText("That file does not exist.");
