@@ -60,7 +60,6 @@ var TSOS;
                 // Update the memory table
                 updateMemory(this.memory);
             }
-
         };
 
 

@@ -18,8 +18,18 @@ var TSOS;
             if(!_ReadyQueue.isEmpty()) {
                 var currentProgram = _ReadyQueue.dequeue();
 
-                if(currentProgram.location === "Disk"){
-                   currentProgram = this.rollInOut(currentProgram);
+
+
+                if(_LastProgram !== null) {
+                    _LastProgram.PC = _LastProgram.PC - _LastProgram.base;
+
+                    if(currentProgram.location === "Disk"){
+                        currentProgram = this.rollInOut(currentProgram);
+                    }
+
+                    if (_LastProgram.state !== "Terminated") {
+                        _ReadyQueue.enqueue(_LastProgram);
+                    }
                 }
 
                 if(currentProgram.state === "Ready"){
@@ -35,18 +45,14 @@ var TSOS;
 
         CpuScheduler.prototype.rollInOut = function (currentProgram) {
             // Obtain old program's base/limit
+
             currentProgram.base = _LastProgram.base;
             currentProgram.limit = _LastProgram.limit;
             currentProgram.location = "Memory";
 
-            _LastProgram.base = "-";
-            _LastProgram.limit = "-";
-            _LastProgram.location = "Disk";
-            _LastProgram.state = "Waiting";
 
 
             var newHex = _FileSystem.readFile("program" + currentProgram.PID, "program");
-            console.log(newHex);
             var newHexArray = newHex.toUpperCase().split(" ");
 
             // Get last program's data, free up memory
@@ -56,17 +62,23 @@ var TSOS;
                 _MemoryManager.memory.storedData[i] = "00";
             }
 
+            console.log(lastHex);
+
             // Enter in new program's data
             for(var i = 0; i < newHexArray.length; i++){
-                _MemoryManager.memory.storedData[i + _LastProgram.limit] = newHexArray[i];
+                _MemoryManager.memory.storedData[i + _LastProgram.base] = newHexArray[i];
             }
 
-            _FileSystem.deleteFile("program" + currentProgram.PID);
+            _LastProgram.base = "-";
+            _LastProgram.limit = "-";
+            _LastProgram.location = "Disk";
+
+            _FileSystem.deleteFile("program" + currentProgram.PID, "program");
             _FileSystem.createFile("program" + _LastProgram.PID, "program");
             _FileSystem.writeToFile("program" + _LastProgram.PID, lastHex.trim(), "program");
 
+            updateCurrentPcb(_LastProgram, currentProgram.base);
             updateCurrentPcb(currentProgram);
-            updateCurrentPcb(_LastProgram);
             updateMemory(_MemoryManager.memory.storedData);
 
             return currentProgram;
@@ -75,7 +87,7 @@ var TSOS;
 
 
         CpuScheduler.prototype.contextSwitch = function (runningProgram) {
-            _CPU.PC = runningProgram.PC;
+            _CPU.PC = runningProgram.PC + runningProgram.base;
             _CPU.Acc = runningProgram.Acc;
             _CPU.Xreg = runningProgram.Xreg;
             _CPU.Yreg = runningProgram.Yreg;
@@ -84,7 +96,7 @@ var TSOS;
         };
 
         CpuScheduler.prototype.checkSwitch = function (runningProgram){
-            _LastProgram = runningProgram;
+
             if(this.type === "rr") {
                 if (_CycleCount === _Quantum || runningProgram.state === "Terminated") {
                     _CycleCount = 0;
@@ -95,11 +107,12 @@ var TSOS;
                             runningProgram.state = "Waiting";
                         }
                         updateCurrentPcb(runningProgram);
-                        _ReadyQueue.enqueue(runningProgram);
+
                     } else if (_ReadyQueue.isEmpty() && runningProgram.state === "Terminated") {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
                         _Scheduling = false;
                     }
+                    _LastProgram = runningProgram;
                     this.runAll();
                 }
             } else if(this.type === "fcfs" || this.type === "priority"){
@@ -112,11 +125,11 @@ var TSOS;
                             runningProgram.state = "Waiting";
                         }
                         updateCurrentPcb(runningProgram);
-                        _ReadyQueue.enqueue(runningProgram);
                     } else if (_ReadyQueue.isEmpty() && runningProgram.state === "Terminated") {
                         _KernelInterruptQueue.enqueue(new TSOS.Interrupt(CPU_BREAK));
                         _Scheduling = false;
                     }
+                    _LastProgram = runningProgram;
                     this.runAll();
                 }
             }

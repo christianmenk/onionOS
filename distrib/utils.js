@@ -90,11 +90,15 @@ function updateCpu(base){
 function updateCurrentPcb(pcb){
     for(var i = 0; i < _ResidentList.length; i++){
         if(pcb.PID === _ResidentList[i].PID){
+            var PC = pcb.PC;
+            if(pcb.base !== "-"){
+                PC = pcb.PC - pcb.base;
+            }
             var row = $('#' + "pid_" + i);
             row.replaceWith('<tr id="' + "pid_" + pcb.PID + '">' +
                 '<td class="PID">' + pcb.PID + '</td>' +
                 '<td class="state">' + pcb.state + '</td>' +
-                '<td class="PC">' + (pcb.PC - pcb.base) + '</td>' +
+                '<td class="PC">' + PC + '</td>' +
                 '<td class="Acc">' + pcb.Acc + '</td>' +
                 '<td class="Xreg">' + pcb.Xreg + '</td>' +
                 '<td class="Yreg">' + pcb.Yreg + '</td>' +
